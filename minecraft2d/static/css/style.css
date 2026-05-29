@@ -156,9 +156,15 @@ img {
 
 .game-layout {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(280px, 0.9fr);
+  grid-template-columns: 1fr;
   gap: 1rem;
   align-items: start;
+}
+
+/* Make status panel constrained and centered under the scene */
+.status-panel {
+  max-width: 1152px;
+  margin: 0 auto;
 }
 
 .scene-panel,
@@ -184,7 +190,7 @@ img {
 
 .scene-frame {
   position: relative;
-  height: 384px;
+  height: 480px;
   width: 100%;
   max-width: 1152px;
   overflow: hidden;
@@ -366,7 +372,7 @@ img {
   }
 
   .scene-frame {
-    height: 288px;
+    height: 360px;
   }
 
   .scene-tile,

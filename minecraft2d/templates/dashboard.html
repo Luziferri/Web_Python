@@ -11,7 +11,6 @@
       <div id="scene-grid" class="scene-grid"></div>
       <img src="{{ url_for('game.image_file', filename='steeve.png') }}" alt="Steve" id="steeve" class="steeve-sprite">
     </div>
-    <p class="scene-help">O terreno usa apenas relva, terra e Steve.</p>
   </article>
 
   <aside class="status-panel">
@@ -59,8 +58,6 @@
   <div id="logs-list" class="logs-list"></div>
 </section>
 
-<script>
-  window.gameBuildings = {{ buildings | tojson }};
-</script>
+<script id="game-buildings" type="application/json">{{ buildings | tojson }}</script>
 <script src="{{ url_for('static', filename='js/game.js') }}"></script>
 {% endblock %}
