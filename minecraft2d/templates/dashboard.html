@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Minecraft 2D{% endblock %}
+{% block content %}
+<section class="game-layout">
+  <article class="scene-panel">
+    <div class="panel-header">
+      <h2>Minecraft 2D</h2>
+      <p>Move o Steve por tiles com as setas ou A / D.</p>
+    </div>
+    <div id="scene-frame" class="scene-frame">
+      <div id="scene-grid" class="scene-grid"></div>
+      <img src="{{ url_for('game.image_file', filename='steeve.png') }}" alt="Steve" id="steeve" class="steeve-sprite">
+    </div>
+    <p class="scene-help">O terreno usa apenas relva, terra e Steve.</p>
+  </article>
+
+  <aside class="status-panel">
+    <div class="panel-header">
+      <h2>Estado da Aldeia</h2>
+      <p>Recursos, construções e progresso.</p>
+    </div>
+    <div class="resource-grid">
+      <div class="resource-card">
+        <span>Madeira</span>
+        <strong id="wood-count">0</strong>
+      </div>
+      <div class="resource-card">
+        <span>Pedra</span>
+        <strong id="stone-count">0</strong>
+      </div>
+    </div>
+    <div class="building-picker">
+      <h3>Construções</h3>
+      <div class="building-list">
+        {% for key, building in buildings.items() %}
+        <button class="building-option" data-building-key="{{ key }}">
+          <strong>{{ building.name }}</strong>
+          <span>{{ building.cost_wood }} madeira · {{ building.cost_stone }} pedra</span>
+        </button>
+        {% endfor %}
+      </div>
+    </div>
+  </aside>
+</section>
+
+<section class="slots-section">
+  <div class="section-header">
+    <h2>Slots de Construção</h2>
+    <p>Escolhe uma construção e clica num slot vazio. Quando acabar, inicia a tarefa e recolhe a recompensa.</p>
+  </div>
+  <div id="slots-grid" class="slots-grid"></div>
+</section>
+
+<section class="logs-section">
+  <div class="section-header">
+    <h2>Histórico</h2>
+    <p>Últimas ações do jogador.</p>
+  </div>
+  <div id="logs-list" class="logs-list"></div>
+</section>
+
+<script>
+  window.gameBuildings = {{ buildings | tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Login · Minecraft 2D{% endblock %}
+{% block content %}
+<section class="auth-card">
+  <h2>Entrar</h2>
+  <form method="post" class="auth-form">
+    <label>Username
+      <input type="text" name="username" required>
+    </label>
+    <label>Password
+      <input type="password" name="password" required>
+    </label>
+    <button type="submit" class="primary-button">Entrar</button>
+  </form>
+  <p class="auth-link">Ainda não tens conta? <a href="{{ url_for('auth.register') }}">Regista-te</a></p>
+</section>
+{% endblock %}
