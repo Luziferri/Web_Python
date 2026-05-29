@@ -6,7 +6,7 @@
     <title>{% block title %}Minecraft 2D{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   </head>
-  <body>
+  <body class="{% block body_class %}{% endblock %}">
     <header class="topbar">
       <div>
         <p class="eyebrow">DAW · Flask · DOM</p>

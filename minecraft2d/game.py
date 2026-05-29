@@ -7,10 +7,18 @@ from flask_login import current_user, login_required
 
 from extensions import db
 from game_data import BUILDINGS
-from models import ActionLog, BuildingSlot, Tree
+from models import ActionLog, BuildingSlot, Stone, Tree
 
 
 game_bp = Blueprint("game", __name__)
+RESOURCE_RESPAWN_SECONDS = 10
+RESOURCE_MAX_AMOUNT = 64
+TREE_WOOD_YIELD = 4
+STONE_STONE_YIELD = 2
+
+
+def clamp_resource_amount(value):
+    return min(value, RESOURCE_MAX_AMOUNT)
 
 
 def sync_slot(slot):
@@ -34,6 +42,9 @@ def sync_slot(slot):
 def ensure_state(user):
     for slot in user.slots:
         sync_slot(slot)
+
+    user.wood = clamp_resource_amount(user.wood)
+    user.stone = clamp_resource_amount(user.stone)
     db.session.commit()
 
 
@@ -69,25 +80,43 @@ def api_state():
     logs = ActionLog.query.filter_by(user_id=current_user.id).order_by(ActionLog.created_at.desc()).limit(8).all()
     # ensure default trees exist
     ensure_trees()
+    ensure_stones()
 
     # build tree payload with availability and seconds until respawn
     now = datetime.utcnow()
-    respawn_seconds = 10
     trees = []
-    for t in Tree.query.order_by(Tree.column).all():
+    for t in Tree.query.filter_by(removed_at=None).order_by(Tree.column).all():
         available = True
         seconds_left = 0
         if t.chopped_at:
             elapsed = (now - t.chopped_at).total_seconds()
-            if elapsed < respawn_seconds:
+            if elapsed < RESOURCE_RESPAWN_SECONDS:
                 available = False
-                seconds_left = int(respawn_seconds - elapsed)
+                seconds_left = int(RESOURCE_RESPAWN_SECONDS - elapsed)
             else:
                 # respawn
                 t.chopped_at = None
                 db.session.add(t)
         trees.append({
             "column": t.column,
+            "available": available,
+            "seconds_left": seconds_left,
+        })
+
+    stones = []
+    for s in Stone.query.filter_by(removed_at=None).order_by(Stone.column).all():
+        available = True
+        seconds_left = 0
+        if s.mined_at:
+            elapsed = (now - s.mined_at).total_seconds()
+            if elapsed < RESOURCE_RESPAWN_SECONDS:
+                available = False
+                seconds_left = int(RESOURCE_RESPAWN_SECONDS - elapsed)
+            else:
+                s.mined_at = None
+                db.session.add(s)
+        stones.append({
+            "column": s.column,
             "available": available,
             "seconds_left": seconds_left,
         })
@@ -107,6 +136,7 @@ def api_state():
             ],
             "buildings": BUILDINGS,
             "trees": trees,
+            "stones": stones,
         }
     )
 
@@ -185,31 +215,88 @@ def api_chop():
     data = request.get_json() or {}
     # expect column in payload
     col = data.get('column')
-    wood_amount = int(data.get('amount', 5)) if data.get('amount') else 5
+    wood_amount = TREE_WOOD_YIELD
     if col is None:
         return jsonify({"ok": False, "message": "Coluna inválida."}), 400
 
-    tree = Tree.query.filter_by(column=int(col)).first()
+    tree = Tree.query.filter_by(column=int(col), removed_at=None).first()
     if not tree:
         return jsonify({"ok": False, "message": "Árvore inexistente."}), 400
 
     # check availability
     now = datetime.utcnow()
-    respawn_seconds = 10
     if tree.chopped_at:
         elapsed = (now - tree.chopped_at).total_seconds()
-        if elapsed < respawn_seconds:
+        if elapsed < RESOURCE_RESPAWN_SECONDS:
             return jsonify({"ok": False, "message": "Árvore ainda não regenerou."}), 400
         else:
             tree.chopped_at = None
 
     # mark chopped
     tree.chopped_at = now
-    current_user.wood += wood_amount
+    current_user.wood = clamp_resource_amount(current_user.wood + wood_amount)
     db.session.add(tree)
-    db.session.add(ActionLog(user_id=current_user.id, message=f"Árvore cortada: +{wood_amount} madeira."))
+    db.session.add(ActionLog(user_id=current_user.id, message=f"Árvore cortada: +{min(wood_amount, RESOURCE_MAX_AMOUNT)} madeira."))
     db.session.commit()
-    return jsonify({"ok": True, "wood": current_user.wood, "respawn_seconds": respawn_seconds})
+    return jsonify({"ok": True, "wood": current_user.wood, "respawn_seconds": RESOURCE_RESPAWN_SECONDS})
+
+
+@game_bp.route('/api/mine-stone', methods=['POST'])
+@login_required
+def api_mine_stone():
+    data = request.get_json() or {}
+    col = data.get('column')
+    stone_amount = STONE_STONE_YIELD
+    if col is None:
+        return jsonify({"ok": False, "message": "Coluna inválida."}), 400
+
+    stone = Stone.query.filter_by(column=int(col), removed_at=None).first()
+    if not stone:
+        return jsonify({"ok": False, "message": "Pedra inexistente."}), 400
+
+    now = datetime.utcnow()
+    if stone.mined_at:
+        elapsed = (now - stone.mined_at).total_seconds()
+        if elapsed < RESOURCE_RESPAWN_SECONDS:
+            return jsonify({"ok": False, "message": "Pedra ainda não regenerou."}), 400
+        stone.mined_at = None
+
+    stone.mined_at = now
+    current_user.stone = clamp_resource_amount(current_user.stone + stone_amount)
+    db.session.add(stone)
+    db.session.add(ActionLog(user_id=current_user.id, message=f"Pedra minerada: +{min(stone_amount, RESOURCE_MAX_AMOUNT)} pedra."))
+    db.session.commit()
+    return jsonify({"ok": True, "stone": current_user.stone, "respawn_seconds": RESOURCE_RESPAWN_SECONDS})
+
+
+@game_bp.route('/api/inventory/remove', methods=['POST'])
+@login_required
+def api_inventory_remove():
+    data = request.get_json() or {}
+    resource = data.get('resource')
+    amount = data.get('amount', 1)
+
+    try:
+        amount = int(amount)
+    except (TypeError, ValueError):
+        return jsonify({"ok": False, "message": "Quantidade inválida."}), 400
+
+    if resource not in {'wood', 'stone'}:
+        return jsonify({"ok": False, "message": "Recurso inválido."}), 400
+
+    if amount <= 0:
+        return jsonify({"ok": False, "message": "A quantidade tem de ser maior que zero."}), 400
+
+    current_value = getattr(current_user, resource)
+    if current_value < amount:
+        return jsonify({"ok": False, "message": "Inventário insuficiente."}), 400
+
+    setattr(current_user, resource, current_value - amount)
+    label = 'madeira' if resource == 'wood' else 'pedra'
+    db.session.add(ActionLog(user_id=current_user.id, message=f"{amount} {label} removida do inventário."))
+    db.session.commit()
+
+    return jsonify({"ok": True, "wood": current_user.wood, "stone": current_user.stone})
 
 
 def ensure_trees():
@@ -219,6 +306,17 @@ def ensure_trees():
         if not Tree.query.filter_by(column=c).first():
             db.session.add(Tree(column=c))
     db.session.commit()
+
+
+def ensure_stones():
+    # default columns where stones should exist
+    default_columns = [1, 4, 7, 10]
+    for c in default_columns:
+        if not Stone.query.filter_by(column=c).first():
+            db.session.add(Stone(column=c))
+    db.session.commit()
+
+
 
 
 @game_bp.route("/img/<path:filename>")

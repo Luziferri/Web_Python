@@ -1,20 +1,33 @@
 {% extends "base.html" %}
 {% block title %}Registo · Minecraft 2D{% endblock %}
+{% block body_class %}auth-page auth-page--minecraft{% endblock %}
 {% block content %}
-<section class="auth-card">
-  <h2>Criar conta</h2>
-  <form method="post" class="auth-form">
-    <label>Username
-      <input type="text" name="username" required>
-    </label>
-    <label>Email
-      <input type="email" name="email" required>
-    </label>
-    <label>Password
-      <input type="password" name="password" required>
-    </label>
-    <button type="submit" class="primary-button">Registar</button>
-  </form>
-  <p class="auth-link">Já tens conta? <a href="{{ url_for('auth.login') }}">Faz login</a></p>
+<section class="auth-screen auth-screen--minecraft">
+  <div class="auth-backdrop"></div>
+  <div class="auth-menu-card">
+    <div class="auth-logo-block">
+      <p class="eyebrow">Minecraft 2D</p>
+      <h2>Registo</h2>
+      <p class="auth-tagline">Cria a tua conta e começa a construir a tua aldeia.</p>
+    </div>
+
+    <form method="post" class="auth-form auth-form--minecraft">
+      <label>
+        <span>Username</span>
+        <input type="text" name="username" placeholder="O teu nome de jogador" required>
+      </label>
+      <label>
+        <span>Email</span>
+        <input type="email" name="email" placeholder="teuemail@exemplo.com" required>
+      </label>
+      <label>
+        <span>Password</span>
+        <input type="password" name="password" placeholder="••••••••" required>
+      </label>
+      <button type="submit" class="primary-button primary-button--minecraft">Registar</button>
+    </form>
+
+    <p class="auth-link auth-link--minecraft">Já tens conta? <a href="{{ url_for('auth.login') }}">Faz login</a></p>
+  </div>
 </section>
 {% endblock %}

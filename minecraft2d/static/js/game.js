@@ -6,45 +6,158 @@ document.addEventListener('DOMContentLoaded', function () {
   var stoneCount = document.querySelector('#stone-count');
   var slotsGrid = document.querySelector('#slots-grid');
   var logsList = document.querySelector('#logs-list');
-  var buildingButtons = document.querySelectorAll('.building-option');
+  var buildingButtons = document.querySelectorAll('.building-option[data-building-key]');
+  var inventoryRemoveButtons = document.querySelectorAll('.inventory-remove');
 
   var tileSize = 96;
   var mapColumns = 12;
   var mapRows = 2;
   var treeTimers = {}; // column -> seconds left
+  var stoneTimers = {}; // column -> seconds left
   var treeTimerIntervalStarted = false;
   var selectedBuildingKey = 'cabana';
   var steeveTile = Number(localStorage.getItem('steeve-tile')) || 2;
   var walkLimit = mapColumns - 1;
 
-  function buildScene() {
+  function buildScene(stones) {
     var row;
     var column;
+    var stoneByColumn = {};
 
     if (!sceneGrid) {
       return;
     }
 
     sceneGrid.innerHTML = '';
+    stoneTimers = {};
+
+    (stones || []).forEach(function (stone) {
+      stoneByColumn[Number(stone.column)] = stone;
+    });
 
     for (row = 0; row < mapRows; row += 1) {
       for (column = 0; column < mapColumns; column += 1) {
         var tile = document.createElement('img');
         var isGrassRow = row === mapRows - 1;
+        var isDirtRow = row === 0;
+        var stone = isDirtRow ? stoneByColumn[column] : null;
 
         tile.className = 'scene-tile';
-        tile.src = isGrassRow ? '/img/relva.png' : '/img/terra.png';
-        tile.alt = isGrassRow ? 'Relva' : 'Terra';
+        tile.src = isGrassRow ? '/img/relva.png' : (stone && stone.available ? '/img/stone.png' : '/img/terra.png');
+        tile.alt = isGrassRow ? 'Relva' : (stone && stone.available ? 'Pedra' : 'Terra');
+        tile.dataset.col = String(column);
         tile.style.left = (column * tileSize) + 'px';
         tile.style.bottom = (row * tileSize) + 'px';
         tile.style.width = tileSize + 'px';
         tile.style.height = tileSize + 'px';
+
+        if (stone && stone.available) {
+          tile.className = 'scene-tile scene-stone';
+          tile.style.zIndex = '2';
+          tile.style.pointerEvents = 'auto';
+          tile.setAttribute('draggable', 'false');
+          tile.setAttribute('tabindex', '-1');
+
+          tile.addEventListener('click', function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+
+            var clicked = ev.currentTarget || ev.target;
+            if (!clicked) return;
+            var col = Number(clicked.dataset.col);
+
+            if (clicked.dataset.mined) return;
+
+            var playerTile = (typeof steeveTile !== 'undefined') ? steeveTile : Number(localStorage.getItem('steeve-tile')) || 0;
+            if (Math.abs(playerTile - col) > 1) {
+              alert('Estás muito longe da pedra. Aproxima-te 1 tile.');
+              return;
+            }
+
+            clicked.dataset.mined = '1';
+            clicked.style.pointerEvents = 'none';
+
+            fetch('/api/mine-stone', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ column: col })
+            })
+              .then(function (r) { return r.json(); })
+              .then(function (payload) {
+                if (!payload || !payload.ok) {
+                  alert((payload && payload.message) || 'Não foi possível minerar a pedra.');
+                  clicked.dataset.mined = '';
+                  clicked.style.pointerEvents = 'auto';
+                  return;
+                }
+
+                clicked.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+                clicked.style.opacity = '0.35';
+                clicked.style.transform = 'translateY(-12px) scale(0.95)';
+                if (stoneCount) {
+                  stoneCount.textContent = String(payload.stone);
+                }
+
+                setTimeout(function () {
+                  refreshState();
+                }, 250);
+              }).catch(function () {
+                alert('Erro de rede ao minerar a pedra.');
+                clicked.dataset.mined = '';
+                clicked.style.pointerEvents = 'auto';
+              });
+          });
+        }
+
+        if (stone && !stone.available) {
+          var stoneBadge = document.createElement('div');
+          stoneBadge.className = 'stone-timer-badge';
+          stoneBadge.dataset.col = String(column);
+          stoneBadge.style.position = 'absolute';
+          stoneBadge.style.left = (column * tileSize + 6) + 'px';
+          stoneBadge.style.bottom = (row * tileSize + (tileSize * 0.9) + 2) + 'px';
+          stoneBadge.style.zIndex = '3';
+          stoneBadge.style.background = 'rgba(0,0,0,0.6)';
+          stoneBadge.style.color = '#fff';
+          stoneBadge.style.padding = '4px 6px';
+          stoneBadge.style.borderRadius = '6px';
+          stoneBadge.style.fontSize = '12px';
+          stoneBadge.textContent = String(stone.seconds_left || 0);
+          sceneGrid.appendChild(stoneBadge);
+          stoneTimers[column] = Number(stone.seconds_left || 0);
+        }
 
         sceneGrid.appendChild(tile);
 
         // trees are rendered by server-driven renderer (renderTrees)
       }
     }
+  }
+
+  function deleteItem(element, options) {
+    var node = element;
+    var delay = 0;
+
+    if (!node) {
+      return;
+    }
+
+    options = options || {};
+    delay = typeof options.delay === 'number' ? options.delay : 250;
+
+    node.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+    node.style.opacity = '0';
+    node.style.transform = 'scale(0.9)';
+
+    setTimeout(function () {
+      try {
+        node.remove();
+      } catch (error) {
+        if (node.parentNode) {
+          node.parentNode.removeChild(node);
+        }
+      }
+    }, delay);
   }
 
   function setSteevePosition() {
@@ -206,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     renderSlots(payload.slots, payload.buildings);
     renderLogs(payload.logs);
-    // render trees provided by server
+    buildScene(payload.stones || []);
     if (payload.trees) {
       renderTrees(payload.trees);
     }
@@ -244,9 +357,10 @@ document.addEventListener('DOMContentLoaded', function () {
           ev.stopPropagation();
           var clicked = ev.currentTarget || ev.target;
           if (!clicked) return;
+          var col = Number(clicked.dataset.col);
+
           if (clicked.dataset.chopped) return;
 
-          var col = Number(clicked.dataset.col);
           var playerTile = (typeof steeveTile !== 'undefined') ? steeveTile : Number(localStorage.getItem('steeve-tile')) || 0;
           if (Math.abs(playerTile - col) > 1) {
             alert('Estás muito longe da árvore. Aproxima-te 1 tile.');
@@ -275,6 +389,7 @@ document.addEventListener('DOMContentLoaded', function () {
               clicked.style.transform = 'translateY(-20px) scale(0.9)';
               var wc = document.querySelector('#wood-count');
               if (wc) wc.textContent = String(payload.wood);
+              deleteItem(clicked, { delay: 300 });
               setTimeout(function () { try { clicked.remove(); } catch (e) {} }, 400);
             }).catch(function () {
               alert('Erro de rede ao cortar a árvore.');
@@ -331,6 +446,16 @@ document.addEventListener('DOMContentLoaded', function () {
             if (seconds <= 0) needsRefresh = true;
           }
         });
+        Object.keys(stoneTimers).forEach(function (col) {
+          var seconds = stoneTimers[col];
+          if (seconds > 0) {
+            seconds -= 1;
+            stoneTimers[col] = seconds;
+            var s = document.querySelector('.stone-timer-badge[data-col="' + col + '"]');
+            if (s) s.textContent = String(seconds);
+            if (seconds <= 0) needsRefresh = true;
+          }
+        });
         if (needsRefresh) {
           // get authoritative state from server
           fetch('/api/state').then(function (r) { return r.json(); }).then(function (p) { renderState(p); });
@@ -372,6 +497,13 @@ document.addEventListener('DOMContentLoaded', function () {
       });
   }
 
+  function removeInventoryResource(resource, amount) {
+    sendAction('/api/inventory/remove', {
+      resource: resource,
+      amount: amount
+    });
+  }
+
   function buildSlot(slotId) {
     sendAction('/api/build/' + slotId, { building_key: selectedBuildingKey });
   }
@@ -393,7 +525,7 @@ document.addEventListener('DOMContentLoaded', function () {
     steeve.style.zIndex = '3';
   }
 
-  buildScene();
+  buildScene([]);
   setSteevePosition();
 
   buildingButtons.forEach(function (button) {
@@ -420,6 +552,14 @@ document.addEventListener('DOMContentLoaded', function () {
   if (buildingButtons[0]) {
     buildingButtons[0].classList.add('selected');
   }
+
+  inventoryRemoveButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+      var resource = button.getAttribute('data-resource');
+      var amount = Number(button.getAttribute('data-amount') || '1');
+      removeInventoryResource(resource, amount);
+    });
+  });
 
   refreshState();
   setInterval(refreshState, 4000);

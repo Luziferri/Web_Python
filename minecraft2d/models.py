@@ -11,8 +11,8 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
-    wood = db.Column(db.Integer, nullable=False, default=40)
-    stone = db.Column(db.Integer, nullable=False, default=20)
+    wood = db.Column(db.Integer, nullable=False, default=26)
+    stone = db.Column(db.Integer, nullable=False, default=26)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     slots = db.relationship("BuildingSlot", backref="user", lazy=True, cascade="all, delete-orphan", order_by="BuildingSlot.slot_number")
@@ -48,6 +48,15 @@ class Tree(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     column = db.Column(db.Integer, nullable=False, unique=True)
     chopped_at = db.Column(db.DateTime, nullable=True)
+    removed_at = db.Column(db.DateTime, nullable=True)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+
+class Stone(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    column = db.Column(db.Integer, nullable=False, unique=True)
+    mined_at = db.Column(db.DateTime, nullable=True)
+    removed_at = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
 

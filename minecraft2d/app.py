@@ -1,5 +1,7 @@
 import os
 
+from sqlalchemy import text
+
 from flask import Flask
 from flask_login import current_user
 
@@ -11,6 +13,17 @@ class Config:
     SECRET_KEY = "dev-minecraft-2d"
     SQLALCHEMY_DATABASE_URI = "sqlite:///minecraft2d.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+
+def ensure_sqlite_column(table_name, column_name, column_definition):
+    existing_columns = {
+        row[1]
+        for row in db.session.execute(text(f"PRAGMA table_info({table_name})")).fetchall()
+    }
+
+    if column_name not in existing_columns:
+        db.session.execute(text(f"ALTER TABLE {table_name} ADD COLUMN {column_definition}"))
+        db.session.commit()
 
 
 def create_app():
@@ -30,6 +43,8 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        ensure_sqlite_column("tree", "removed_at", "removed_at DATETIME")
+        ensure_sqlite_column("stone", "removed_at", "removed_at DATETIME")
 
     @app.context_processor
     def inject_user():
