@@ -1,0 +1,12 @@
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Flask / app data
+minecraft2d/instance/*.db
+minecraft2d/instance/*.sqlite3
+minecraft2d/instance/*.sqlite
