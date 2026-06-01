@@ -1097,21 +1097,70 @@ body.dark-mode .scene-frame {
 }
 
 /*LEADERBOARD*/
+/* Organizar a lista*/
+.ranking-list {
+    display: grid;
+    gap: 0.8rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Estilo para cada jogador*/
 .ranking-item {
     display: flex;
     justify-content: space-between;
-    padding: 12px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-radius: 0.5rem;
+    background: rgba(13, 22, 41, 0.72); /* Cor de fundo semelhante aos slots */
+    border: 2px solid rgba(162, 180, 221, 0.15);
+    color: #f4f4f4;
     font-size: 1.1rem;
-    color: var(--text);
+    transition: transform 0.2s ease, background-color 0.2s ease; /* Animação suave no hover */
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.1), 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-/*Cores das Badges*/
-.badge-1 { color: #ffd700; font-weight: bold; text-shadow: 1px 1px 0px #000; }
-.badge-2 { color: #c0c0c0; font-weight: bold; text-shadow: 1px 1px 0px #000; }
-.badge-3 { color: #cd7f32; font-weight: bold; text-shadow: 1px 1px 0px #000; }
+/* Efeito ao passar o rato */
+.ranking-item:hover {
+    transform: translateY(-3px); /* Levanta o cartão ligeiramente */
+    background: rgba(25, 40, 70, 0.85);
+}
 
-/*Modo Escuro*/
+/* 1º Lugar */
+.badge-1 {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(218, 165, 32, 0.25) 100%);
+    border-color: #ffd700;
+    color: #ffd700;
+    font-size: 1.2rem;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2), inset 1px 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* 2º Lugar */
+.badge-2 {
+    background: linear-gradient(135deg, rgba(192, 192, 192, 0.1) 0%, rgba(169, 169, 169, 0.2) 100%);
+    border-color: #c0c0c0;
+    color: #e0e0e0;
+    font-weight: bold;
+}
+
+/* 3º Lugar */
+.badge-3 {
+    background: linear-gradient(135deg, rgba(205, 127, 50, 0.1) 0%, rgba(139, 69, 19, 0.2) 100%);
+    border-color: #cd7f32;
+    color: #e6a87c;
+    font-weight: bold;
+}
+
+/* Suporte para Modo Escuro*/
 body.dark-mode .ranking-item {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: #4d5560;
+    border-color: #788191;
+    color: #f2f5fb;
+    box-shadow: inset 1.5px 1.5px 0 rgba(38, 45, 54, 0.85), inset -2px -2px 0 #788191;
 }
+
+body.dark-mode .badge-1 { background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(218, 165, 32, 0.3)); }
+body.dark-mode .badge-2 { background: linear-gradient(135deg, rgba(192, 192, 192, 0.15), rgba(169, 169, 169, 0.25)); }
+body.dark-mode .badge-3 { background: linear-gradient(135deg, rgba(205, 127, 50, 0.15), rgba(139, 69, 19, 0.25)); }
