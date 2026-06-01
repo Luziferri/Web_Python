@@ -1107,9 +1107,9 @@ body.dark-mode .scene-frame {
 }
 
 /*Cores das Badges*/
-.badge-1 { color: #ffd700; font-weight: bold; text-shadow: 1px 1px 0px #000; } /* Ouro */
-.badge-2 { color: #c0c0c0; font-weight: bold; text-shadow: 1px 1px 0px #000; } /* Prata */
-.badge-3 { color: #cd7f32; font-weight: bold; text-shadow: 1px 1px 0px #000; } /* Bronze */
+.badge-1 { color: #ffd700; font-weight: bold; text-shadow: 1px 1px 0px #000; }
+.badge-2 { color: #c0c0c0; font-weight: bold; text-shadow: 1px 1px 0px #000; }
+.badge-3 { color: #cd7f32; font-weight: bold; text-shadow: 1px 1px 0px #000; }
 
 /*Modo Escuro*/
 body.dark-mode .ranking-item {
