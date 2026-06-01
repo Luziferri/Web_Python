@@ -1113,7 +1113,7 @@ body.dark-mode .scene-frame {
     align-items: center;
     padding: 1rem 1.25rem;
     border-radius: 0.5rem;
-    background: rgba(13, 22, 41, 0.72); /* Cor de fundo semelhante aos slots */
+    background: #8b8b8b; /* Cor de fundo semelhante aos slots */
     border: 2px solid rgba(162, 180, 221, 0.15);
     color: #f4f4f4;
     font-size: 1.1rem;
