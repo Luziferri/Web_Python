@@ -1105,7 +1105,6 @@ body.dark-mode .scene-frame {
     list-style: none;
     padding: 0;
     margin: 0;
-    width: 100%;
 }
 
 /* Estilo base para cada jogador (efeito de cartão/bloco) - Otimizado para Modo Claro */
@@ -1115,7 +1114,6 @@ body.dark-mode .scene-frame {
     align-items: center;
     padding: 1rem 1.25rem;
     border-radius: 0.5rem;
-    width: 100%;
     background: #ffffff; /* Fundo branco para o modo claro */
     border: 2px solid rgba(0, 0, 0, 0.08); /* Borda cinza muito subtil */
     color: #2b2b2b; /* Texto escuro para ser legível */
@@ -1173,3 +1171,27 @@ body.dark-mode .ranking-item:hover {
 body.dark-mode .badge-1 { color: #ffd700; text-shadow: 1px 1px 0px #000; }
 body.dark-mode .badge-2 { color: #e0e0e0; text-shadow: 1px 1px 0px #000; }
 body.dark-mode .badge-3 { color: #e6a87c; text-shadow: 1px 1px 0px #000; }
+
+.caixa-titulo-ranking {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border: 2px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+    }
+
+/* Forçar o texto a ficar escuro para se ler no fundo claro */
+.caixa-titulo-ranking h2, 
+.caixa-titulo-ranking p {
+    color: #2b2b2b !important; 
+}
+/* Suporte para Modo Escuro na caixa do título */
+body.dark-mode .caixa-titulo-ranking {
+    background: #4d5560;
+    border-color: #788191;
+}
+body.dark-mode .caixa-titulo-ranking h2, 
+body.dark-mode .caixa-titulo-ranking p {
+    color: #f2f5fb !important;
+    }
