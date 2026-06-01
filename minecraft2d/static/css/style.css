@@ -1124,7 +1124,7 @@ body.dark-mode .scene-frame {
 /* Efeito ao passar o rato */
 .ranking-item:hover {
     transform: translateY(-3px); /* Levanta o cartão ligeiramente */
-    background: #192846d9;
+    background: #656a74d9;
 }
 
 /* 1º Lugar */
