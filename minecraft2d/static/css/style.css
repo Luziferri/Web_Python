@@ -1124,7 +1124,7 @@ body.dark-mode .scene-frame {
 /* Efeito ao passar o rato */
 .ranking-item:hover {
     transform: translateY(-3px); /* Levanta o cartão ligeiramente */
-    background: rgba(25, 40, 70, 0.85);
+    background: #8b8b8b;
 }
 
 /* 1º Lugar */
@@ -1153,9 +1153,9 @@ body.dark-mode .scene-frame {
     font-weight: bold;
 }
 
-/* Suporte para Modo Escuro*/
+/*Modo Escuro*/
 body.dark-mode .ranking-item {
-    background: #788191;
+    background: #4d5560;
     border-color: #788191;
     color: #f2f5fb;
     box-shadow: inset 1.5px 1.5px 0 rgba(38, 45, 54, 0.85), inset -2px -2px 0 #788191;
