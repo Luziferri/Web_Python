@@ -1098,11 +1098,11 @@ body.dark-mode .scene-frame {
 
 /*LEADERBOARD*/
 
-/* O NOVO QUADRADO GRANDE (Ocupa o ecrã todo) */
+/* O NOVO QUADRADO GRANDE*/
 .caixa-ecra-todo {
     width: 100%;
     min-height: 82vh;
-    background: #ffffff;
+    background: #6d7788;
     border: 2px solid rgba(0, 0, 0, 0.08);
     border-radius: 0.5rem;
     padding: 2.5rem 2rem;
@@ -1126,9 +1126,6 @@ body.dark-mode .scene-frame {
     height: auto;
 }
 
-/* ==========================================================================
-   LEADERBOARD / RANKING - LISTA DOS JOGADORES
-   ========================================================================== */
 
 /* Organizar a lista usando Grid */
 .ranking-list {
@@ -1146,7 +1143,7 @@ body.dark-mode .scene-frame {
     align-items: center;
     padding: 1rem 1.25rem;
     border-radius: 0.5rem;
-    background: #ffffff;
+    background: #6d7788;
     border: 2px solid rgba(0, 0, 0, 0.08);
     color: #2b2b2b;
     font-size: 1.1rem;
@@ -1156,7 +1153,7 @@ body.dark-mode .scene-frame {
 
 .ranking-item:hover {
     transform: translateY(-3px);
-    background: #f4f6f9;
+    background: #6d7788;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
