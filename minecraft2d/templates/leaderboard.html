@@ -2,16 +2,22 @@
 {% block title %}Ranking · Minecraft 2D{% endblock %}
 
 {% block content %}
-<section class="slots-section">
-    <div class="section-header caixa-titulo-ranking">
-        <h2>Leaderboard</h2>
+<!-- QUADRADO GRANDE (Fundo): Ocupa a tela toda -->
+<section class="caixa-ecra-todo">
+    
+    <!-- TEXTO NO TOPO -->
+    <div class="titulo-ranking-centro">
+        <h2>Leaderboard (Top 10)</h2>
         <p>Jogadores com mais recursos acumulados!</p>
     </div>
     
-    <div class="inventory-panel" style="margin-top: 1rem; width: 100%; max-width: 600px; min-height: 80vh; width: 100%; display: flex; flex-direction: column;">
+    <!-- QUADRADO DOS JOGADORES: Cresce à medida que entram pessoas -->
+    <div class="inventory-panel caixa-dos-jogadores">
         <ul id="ranking-list" class="ranking-list">
-            </ul>
+            <!-- Os itens serão injetados aqui via JavaScript -->
+        </ul>
     </div>
+
 </section>
 
 <script>
@@ -60,7 +66,10 @@
             .catch(erro => console.error("Erro ao carregar o ranking:", erro));
     }
 
+    // Carregar logo ao abrir a página
     atualizarRanking();
+    
+    // Atualizar em tempo real a cada 5 segundos
     setInterval(atualizarRanking, 5000);
 </script>
 {% endblock %}

@@ -1098,7 +1098,39 @@ body.dark-mode .scene-frame {
 
 /*LEADERBOARD*/
 
-/* Organizar a lista usando Grid para dar espaçamento entre os cartões */
+/* O NOVO QUADRADO GRANDE (Ocupa o ecrã todo) */
+.caixa-ecra-todo {
+    width: 100%;
+    min-height: 82vh;
+    background: #ffffff;
+    border: 2px solid rgba(0, 0, 0, 0.08);
+    border-radius: 0.5rem;
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* O texto no topo da caixa gigante */
+.titulo-ranking-centro {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #2b2b2b;
+}
+
+/* O quadrado interior (onde ficam os jogadores) - Cresce sozinho */
+.caixa-dos-jogadores {
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+}
+
+/* ==========================================================================
+   LEADERBOARD / RANKING - LISTA DOS JOGADORES
+   ========================================================================== */
+
+/* Organizar a lista usando Grid */
 .ranking-list {
     display: grid;
     gap: 0.8rem;
@@ -1107,91 +1139,78 @@ body.dark-mode .scene-frame {
     margin: 0;
 }
 
-/* Estilo base para cada jogador (efeito de cartão/bloco) - Otimizado para Modo Claro */
+/* Estilo base para cada jogador (efeito de cartão/bloco) */
 .ranking-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 1.25rem;
     border-radius: 0.5rem;
-    background: #ffffff; /* Fundo branco para o modo claro */
-    border: 2px solid rgba(0, 0, 0, 0.08); /* Borda cinza muito subtil */
-    color: #2b2b2b; /* Texto escuro para ser legível */
+    background: #ffffff;
+    border: 2px solid rgba(0, 0, 0, 0.08);
+    color: #2b2b2b;
     font-size: 1.1rem;
     transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra suave */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Efeito ao passar o rato (Hover) no Modo Claro */
 .ranking-item:hover {
-    transform: translateY(-3px); /* Levanta o cartão ligeiramente */
-    background: #f4f6f9; /* Cinza/azulado muito clarinho */
+    transform: translateY(-3px);
+    background: #f4f6f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
-/* Ouro - 1º Lugar */
+/* ==========================================================================
+   TOP 3 BADGES (Cores do Pódio)
+   ========================================================================== */
 .badge-1 {
     background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(218, 165, 32, 0.25) 100%);
     border-color: #ffd700;
-    color: #b8860b; /* Tom de ouro mais escuro para ler no fundo claro */
+    color: #b8860b;
     font-size: 1.2rem;
     font-weight: bold;
 }
 
-/* Prata - 2º Lugar */
 .badge-2 {
     background: linear-gradient(135deg, rgba(192, 192, 192, 0.1) 0%, rgba(169, 169, 169, 0.2) 100%);
     border-color: #c0c0c0;
-    color: #696969; /* Cinza escuro */
+    color: #696969;
     font-weight: bold;
 }
 
-/* Bronze - 3º Lugar */
 .badge-3 {
     background: linear-gradient(135deg, rgba(205, 127, 50, 0.1) 0%, rgba(139, 69, 19, 0.2) 100%);
     border-color: #cd7f32;
-    color: #8b4513; /* Castanho escuro */
+    color: #8b4513;
     font-weight: bold;
 }
 
-/* Modo Escuro */
+/* ==========================================================================
+   SUPORTE PARA MODO ESCURO
+   ========================================================================== */
+
+/* Quadrado grande e texto no Modo Escuro */
+body.dark-mode .caixa-ecra-todo {
+    background: #2b323e;
+    border-color: #5d6673;
+}
+body.dark-mode .titulo-ranking-centro {
+    color: #f2f5fb;
+}
+
+/* Jogadores no Modo Escuro */
 body.dark-mode .ranking-item {
-    background: #4d5560; /* Fundo escuro do jogo */
+    background: #4d5560;
     border-color: #788191;
-    color: #f2f5fb; /* Texto branco */
+    color: #f2f5fb;
     box-shadow: inset 1.5px 1.5px 0 rgba(38, 45, 54, 0.85), inset -2px -2px 0 #788191;
 }
 
 body.dark-mode .ranking-item:hover {
-    background: #5d6673; /* Fica ligeiramente mais claro no hover escuro */
+    background: #5d6673;
 }
 
-/* Ajustar as cores das letras do Top 3 para brilharem no Modo Escuro */
+/* Badges no Modo Escuro (Para brilharem no fundo escuro) */
 body.dark-mode .badge-1 { color: #ffd700; text-shadow: 1px 1px 0px #000; }
 body.dark-mode .badge-2 { color: #e0e0e0; text-shadow: 1px 1px 0px #000; }
 body.dark-mode .badge-3 { color: #e6a87c; text-shadow: 1px 1px 0px #000; }
-
-.caixa-titulo-ranking {
-    background: #ffffff;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    border: 2px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    margin-bottom: 1.5rem;
-    }
-
-/* Forçar o texto a ficar escuro para se ler no fundo claro */
-.caixa-titulo-ranking h2, 
-.caixa-titulo-ranking p {
-    color: #2b2b2b !important; 
-}
-/* Suporte para Modo Escuro na caixa do título */
-body.dark-mode .caixa-titulo-ranking {
-    background: #4d5560;
-    border-color: #788191;
-}
-body.dark-mode .caixa-titulo-ranking h2, 
-body.dark-mode .caixa-titulo-ranking p {
-    color: #f2f5fb !important;
-    }
