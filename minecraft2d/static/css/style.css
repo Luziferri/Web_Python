@@ -1095,3 +1095,23 @@ body.dark-mode .scene-frame {
     font-size: 0.9rem;
   }
 }
+
+/*LEADERBOARD*/
+.ranking-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    font-size: 1.1rem;
+    color: var(--text);
+}
+
+/*Cores das Badges*/
+.badge-1 { color: #ffd700; font-weight: bold; text-shadow: 1px 1px 0px #000; } /* Ouro */
+.badge-2 { color: #c0c0c0; font-weight: bold; text-shadow: 1px 1px 0px #000; } /* Prata */
+.badge-3 { color: #cd7f32; font-weight: bold; text-shadow: 1px 1px 0px #000; } /* Bronze */
+
+/*Modo Escuro*/
+body.dark-mode .ranking-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
