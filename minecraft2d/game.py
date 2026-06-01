@@ -432,3 +432,18 @@ def api_inventory_remove():
     database.add_action_log(current_user.id, f"{amount} {label} removida do inventário.")
 
     return jsonify({"ok": True, "wood": current_user.wood, "stone": current_user.stone, "iron": current_user.iron})
+
+@game_bp.route("/leaderboard")
+@login_required
+def leaderboard():
+    #renderiza a página base do ranking
+    return render_template("leaderboard.html")
+
+@game_bp.route("/api/leaderboard")
+@login_required
+def api_leaderboard():
+    #envia o ranking para o frontend
+    #atualizar a página em tempo real sem fazer refresh
+    database = get_db()
+    ranking = database.get_leaderboard()
+    return jsonify({"ranking": ranking})
