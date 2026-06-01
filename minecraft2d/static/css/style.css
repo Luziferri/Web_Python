@@ -1155,7 +1155,7 @@ body.dark-mode .scene-frame {
 
 /* Suporte para Modo Escuro*/
 body.dark-mode .ranking-item {
-    background: #4d5560;
+    background: #788191;
     border-color: #788191;
     color: #f2f5fb;
     box-shadow: inset 1.5px 1.5px 0 rgba(38, 45, 54, 0.85), inset -2px -2px 0 #788191;
