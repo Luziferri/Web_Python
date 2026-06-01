@@ -9,32 +9,33 @@
     </div>
     
     <div class="inventory-panel" style="margin-top: 1rem; width: 100%; max-width: 600px;">
-        <ul id="ranking-list" style="list-style: none; padding: 0; margin: 0;">
+        <ul id="ranking-list" class="ranking-list">
             </ul>
     </div>
 </section>
 
 <script>
-    //Buscarr os dados e manipular o DOM
     function atualizarRanking() {
         fetch("{{ url_for('game.api_leaderboard') }}")
             .then(response => response.json())
             .then(data => {
                 let lista = document.getElementById("ranking-list");
-                lista.innerHTML = ""; // Limpar lista atual antes de renderizar
+                lista.innerHTML = ""; 
 
-                // Percorrer o array de objetos devolvido pela BD
                 for (let i = 0; i < data.ranking.length; i++) {
                     let jogador = data.ranking[i];
                     
-                    // Criar o elemento dinamicamente (Lab 05)
                     let li = document.createElement("li");
                     li.classList.add("ranking-item");
 
                     let posicao = i + 1;
+                    
+                    // Criar spans separados para nome e pontuação
+                    let spanInfo = document.createElement("span");
+                    let spanPontos = document.createElement("span");
+                    
                     let textoPrefixo = posicao + "º ";
 
-                    // Adicionar Badges para os 3 primeiros
                     if (posicao === 1) {
                         li.classList.add("badge-1");
                         textoPrefixo = "🥇 " + textoPrefixo;
@@ -46,18 +47,20 @@
                         textoPrefixo = "🥉 " + textoPrefixo;
                     }
 
-                    // Definir o texto e adicionar ao DOM
-                    li.textContent = textoPrefixo + jogador.username + " - " + jogador.score + " pontos";
+                    spanInfo.textContent = textoPrefixo + jogador.username;
+                    spanPontos.textContent = jogador.score + " pts";
+                    
+                    // Adicionar as duas partes ao cartão
+                    li.appendChild(spanInfo);
+                    li.appendChild(spanPontos);
+                    
                     lista.appendChild(li);
                 }
             })
             .catch(erro => console.error("Erro ao carregar o ranking:", erro));
     }
 
-    //Carregar os dados ao abrir a página
     atualizarRanking();
-    
-    //Atualizaçar em tempo real a cada 5 segundos
     setInterval(atualizarRanking, 5000);
 </script>
 {% endblock %}
