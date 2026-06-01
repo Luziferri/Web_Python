@@ -7,7 +7,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 from models import Database, User
 
 
-# Blueprint agrupa rotas com prefixo comum (aqui sem prefixo).
+# Blueprint agrupa rotas com prefixo comum (aqui sem prefixo).aaaaa
 auth_bp = Blueprint("auth", __name__)
 
 
