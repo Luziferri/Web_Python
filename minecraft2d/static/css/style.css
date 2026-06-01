@@ -1105,6 +1105,7 @@ body.dark-mode .scene-frame {
     list-style: none;
     padding: 0;
     margin: 0;
+    width: 100%;
 }
 
 /* Estilo base para cada jogador (efeito de cartão/bloco) - Otimizado para Modo Claro */
@@ -1114,6 +1115,7 @@ body.dark-mode .scene-frame {
     align-items: center;
     padding: 1rem 1.25rem;
     border-radius: 0.5rem;
+    width: 100%;
     background: #ffffff; /* Fundo branco para o modo claro */
     border: 2px solid rgba(0, 0, 0, 0.08); /* Borda cinza muito subtil */
     color: #2b2b2b; /* Texto escuro para ser legível */
