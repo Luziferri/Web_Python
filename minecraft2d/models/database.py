@@ -669,3 +669,17 @@ class Database:
                 ),
             )
             connection.commit()
+
+#Leaderboard
+    def get_leaderboard(self):
+        with self._connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT username, (wood + stone + iron) AS score
+                FROM users
+                ORDER BY score DESC
+                LIMIT 10
+                """
+            ).fetchall()
+        #Converte as linhas para uma lista de dicionários
+        return [{"username": row["username"], "score": row["score"]} for row in rows]
