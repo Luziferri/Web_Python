@@ -545,6 +545,14 @@ img {
   pointer-events: auto;
 }
 
+/* Céu noturno: estrelas */
+.scene-stars {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
 .move-controls {
   display: flex;
   gap: 0.5rem;
@@ -962,6 +970,7 @@ body.dark-mode {
     radial-gradient(circle at top, rgba(80, 128, 94, 0.2), transparent 28%),
     radial-gradient(circle at 20% 20%, rgba(152, 120, 68, 0.16), transparent 20%),
     linear-gradient(180deg, #0b1018 0%, #0a0f16 48%, #0d1320 100%);
+  overflow: hidden;
 }
 
 body.dark-mode .topbar {
@@ -1028,6 +1037,19 @@ body.dark-mode .scene-frame::after {
   z-index: 5;
 }
 
+body.dark-mode .scene-frame::before {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  top: 20px;
+  right: 40px;
+  z-index: 6;
+  pointer-events: none;
+  background: url('/static/img/moon.png') center center / contain no-repeat;
+  filter: drop-shadow(0 0 20px rgba(255, 255, 200, 0.6)) drop-shadow(0 0 60px rgba(255, 255, 200, 0.3));
+  animation: moon-glow 4s ease-in-out infinite alternate;
+}
 @media (max-width: 980px) {
   .game-layout,
   .slots-grid,
@@ -1037,6 +1059,10 @@ body.dark-mode .scene-frame::after {
 
   .scene-frame {
     max-width: 100%;
+  }
+
+  body.dark-mode .scene-frame::before {
+    display: none;
   }
 }
 
@@ -1221,3 +1247,15 @@ body.dark-mode .ranking-item:hover {
 body.dark-mode .badge-1 { color: #ffd700; text-shadow: 1px 1px 0px #000; }
 body.dark-mode .badge-2 { color: #e0e0e0; text-shadow: 1px 1px 0px #000; }
 body.dark-mode .badge-3 { color: #e6a87c; text-shadow: 1px 1px 0px #000; }
+
+@keyframes moon-glow {
+  0% { filter: drop-shadow(0 0 15px rgba(255, 255, 200, 0.5)) drop-shadow(0 0 50px rgba(255, 255, 200, 0.2)); }
+  100% { filter: drop-shadow(0 0 25px rgba(255, 255, 200, 0.8)) drop-shadow(0 0 70px rgba(255, 255, 200, 0.4)); }
+}
+
+@keyframes star-twinkle {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.9; }
+  100% { opacity: 0.3; }
+}
+

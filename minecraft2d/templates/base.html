@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Minecraft 2D{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fireflies.css') }}">
   </head>
   <body class="{% block body_class %}{% endblock %}">
     <header class="topbar">
@@ -38,6 +39,7 @@
     <main class="page-shell">
       {% block content %}{% endblock %}
     </main>
+    <script src="{{ url_for('static', filename='js/night.js') }}"></script>
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
   </body>
 </html>

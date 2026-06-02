@@ -15,6 +15,15 @@ function initTheme() {
       themeToggle.textContent = isDark ? 'Modo claro' : 'Modo escuro';
       themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
     }
+
+    if (window.Night) {
+      if (isDark) {
+        var sf = document.getElementById('scene-frame');
+        if (sf) { window.Night.create(sf); }
+      } else {
+        window.Night.destroy();
+      }
+    }
   }
 
   function getInitialTheme() {
