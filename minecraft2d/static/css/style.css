@@ -545,14 +545,6 @@ img {
   pointer-events: auto;
 }
 
-/* Céu noturno: estrelas */
-.scene-stars {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-}
-
 .move-controls {
   display: flex;
   gap: 0.5rem;
@@ -583,18 +575,6 @@ img {
 
 .move-btn:active {
   box-shadow: inset -2px -2px 0 rgba(255, 255, 255, 0.22), inset 2px 2px 0 rgba(0, 0, 0, 0.34);
-}
-
-body.dark-mode .move-btn {
-  background: #474f59;
-  color: #f2f5fb;
-  border-color: #0f1217;
-  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.15), inset -2px -2px 0 rgba(0, 0, 0, 0.45);
-}
-
-body.dark-mode .move-btn:hover {
-  background: #3a4149;
-  color: #ffffa0;
 }
 
 .scene-help {
@@ -963,93 +943,6 @@ body.dark-mode .move-btn:hover {
   max-width: none;
 }
 
-/* Dark mode */
-body.dark-mode {
-  color: #e9edf7;
-  background:
-    radial-gradient(circle at top, rgba(80, 128, 94, 0.2), transparent 28%),
-    radial-gradient(circle at 20% 20%, rgba(152, 120, 68, 0.16), transparent 20%),
-    linear-gradient(180deg, #0b1018 0%, #0a0f16 48%, #0d1320 100%);
-  overflow: hidden;
-}
-
-body.dark-mode .topbar {
-  background: #2a2f36;
-  box-shadow: 5px 5px 0 #11161d, inset 4px 4px 0 #4a5059;
-}
-
-body.dark-mode .topbar h1,
-body.dark-mode .topbar .eyebrow {
-  color: #eef2fa;
-}
-
-body.dark-mode .nav-links a,
-body.dark-mode .nav-theme-toggle {
-  background: #474f59;
-  color: #f2f5fb;
-  border-color: #0f1217;
-  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.15), inset -2px -2px 0 rgba(0, 0, 0, 0.45);
-}
-
-body.dark-mode .scene-panel,
-body.dark-mode .status-panel,
-body.dark-mode .slots-section,
-body.dark-mode .logs-section,
-body.dark-mode .inventory-panel {
-  background: #2f343d;
-  box-shadow: 5px 5px 0 #131821, inset 4px 4px 0 #555c68;
-  color: #edf1f9;
-}
-
-body.dark-mode .panel-header h2,
-body.dark-mode .section-header h2,
-body.dark-mode .status-panel h2,
-body.dark-mode .slots-section h2,
-body.dark-mode .logs-section h2,
-body.dark-mode .status-panel h3,
-body.dark-mode .inventory-panel h3,
-body.dark-mode .panel-header p,
-body.dark-mode .section-header p {
-  color: #eef2fa;
-}
-
-body.dark-mode .building-option,
-body.dark-mode .slot-card,
-body.dark-mode .log-card,
-body.dark-mode .inventory-slot {
-  background: #4d5560;
-  box-shadow: inset 1.5px 1.5px 0 rgba(38, 45, 54, 0.85), inset -2px -2px 0 #788191;
-  color: #f2f5fb;
-}
-
-body.dark-mode .scene-frame {
-  background: url('/static/img/night.png') repeat;
-  border-color: #6d7788;
-  box-shadow: inset 0 3px 0 rgba(150, 168, 196, 0.35), inset 0 -6px 0 rgba(0, 0, 0, 0.35);
-}
-
-body.dark-mode .scene-frame::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  pointer-events: none;
-  z-index: 5;
-}
-
-body.dark-mode .scene-frame::before {
-  content: '';
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  top: 20px;
-  right: 40px;
-  z-index: 6;
-  pointer-events: none;
-  background: url('/static/img/moon.png') center center / contain no-repeat;
-  filter: drop-shadow(0 0 20px rgba(255, 255, 200, 0.6)) drop-shadow(0 0 60px rgba(255, 255, 200, 0.3));
-  animation: moon-glow 4s ease-in-out infinite alternate;
-}
 @media (max-width: 980px) {
   .game-layout,
   .slots-grid,
@@ -1059,10 +952,6 @@ body.dark-mode .scene-frame::before {
 
   .scene-frame {
     max-width: 100%;
-  }
-
-  body.dark-mode .scene-frame::before {
-    display: none;
   }
 }
 
@@ -1218,44 +1107,4 @@ body.dark-mode .scene-frame::before {
     font-weight: bold;
 }
 
-/* ==========================================================================
-   SUPORTE PARA MODO ESCURO
-   ========================================================================== */
-
-/* Quadrado grande e texto no Modo Escuro */
-body.dark-mode .caixa-ecra-todo {
-    background: #2b323e;
-    border-color: #5d6673;
-}
-body.dark-mode .titulo-ranking-centro {
-    color: #f2f5fb;
-}
-
-/* Jogadores no Modo Escuro */
-body.dark-mode .ranking-item {
-    background: #4d5560;
-    border-color: #788191;
-    color: #f2f5fb;
-    box-shadow: inset 1.5px 1.5px 0 rgba(38, 45, 54, 0.85), inset -2px -2px 0 #788191;
-}
-
-body.dark-mode .ranking-item:hover {
-    background: #5d6673;
-}
-
-/* Badges no Modo Escuro (Para brilharem no fundo escuro) */
-body.dark-mode .badge-1 { color: #ffd700; text-shadow: 1px 1px 0px #000; }
-body.dark-mode .badge-2 { color: #e0e0e0; text-shadow: 1px 1px 0px #000; }
-body.dark-mode .badge-3 { color: #e6a87c; text-shadow: 1px 1px 0px #000; }
-
-@keyframes moon-glow {
-  0% { filter: drop-shadow(0 0 15px rgba(255, 255, 200, 0.5)) drop-shadow(0 0 50px rgba(255, 255, 200, 0.2)); }
-  100% { filter: drop-shadow(0 0 25px rgba(255, 255, 200, 0.8)) drop-shadow(0 0 70px rgba(255, 255, 200, 0.4)); }
-}
-
-@keyframes star-twinkle {
-  0% { opacity: 0.3; }
-  50% { opacity: 0.9; }
-  100% { opacity: 0.3; }
-}
 
