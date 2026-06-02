@@ -516,8 +516,8 @@ img {
 }
 
 .steeve-axe-badge .axe-icon {
-  width: 36px;
-  height: 36px;
+  width: calc(var(--scene-tile-size, 96px) * 1.125);
+  height: calc(var(--scene-tile-size, 96px) * 1.125);
   image-rendering: pixelated;
   transform: scaleX(-1) rotate(-60deg);
 }
@@ -1014,8 +1014,18 @@ body.dark-mode .inventory-slot {
 }
 
 body.dark-mode .scene-frame {
+  background: url('/static/img/night.png') repeat;
   border-color: #6d7788;
   box-shadow: inset 0 3px 0 rgba(150, 168, 196, 0.35), inset 0 -6px 0 rgba(0, 0, 0, 0.35);
+}
+
+body.dark-mode .scene-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  z-index: 5;
 }
 
 @media (max-width: 980px) {

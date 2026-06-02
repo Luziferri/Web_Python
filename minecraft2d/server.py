@@ -36,4 +36,4 @@ app.register_blueprint(game_bp)
 # Arranca o servidor. ✅ (Lab 07 — app.run).
 # debug=False ❌ fora (Lab 07 usa debug=True). Desativado em produção para evitar double-execution e segurança.
 if __name__ == "__main__":
-    app.run(debug=False, host="127.0.0.1", port=8000)
+    app.run(debug=False, host="127.0.0.1", port=8001)

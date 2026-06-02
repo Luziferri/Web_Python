@@ -1,7 +1,4 @@
 # views.py
-
-
-
 from datetime import datetime, timedelta
 
 from flask import Blueprint, current_app, jsonify, render_template, request

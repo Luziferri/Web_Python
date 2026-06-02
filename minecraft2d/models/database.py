@@ -281,7 +281,8 @@ class Database:
                 )
                 """
             )
-            for column in (2, 5, 9):
+            #localizalçao da arvore
+            for column in (2, 8, 15):
                 cursor.execute(
                     """
                     INSERT OR IGNORE INTO trees (column, created_at)
@@ -562,7 +563,7 @@ class Database:
     def ensure_trees(self):
         with self._connect() as connection:
             cursor = connection.cursor()
-            for column in (2, 5, 9):
+            for column in (2, 8, 15):
                 cursor.execute(
                     """
                     INSERT OR IGNORE INTO trees (column, created_at)

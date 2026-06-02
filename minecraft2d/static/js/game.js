@@ -12,7 +12,9 @@ function initGame() {
 
   // Variáveis de estado: tamanho do tile, colunas, posição do jogador, construção selecionada.
   // Uso de variáveis: Lab 04 ✅.
-  var tileSize = 96;
+  var baseTileSize = 96;
+  var sceneScale = 1 / 3;
+  var tileSize = Math.round(baseTileSize * sceneScale);
   var mapColumns = 12;
   var minimumColumns = 12;
   var mapRows = 2;
@@ -27,14 +29,18 @@ function initGame() {
     iron: -1
   };
 
+  function scaleSceneValue(value) {
+    return Math.round(value * tileSize / baseTileSize);
+  }
+
   // Ajusta tamanho base dos tiles conforme a largura do ecrã.
   // Media queries com JS (fora da matéria: window.innerWidth não foi ensinado nos labs de JS).
   function getBaseTileSize() {
     if (window.innerWidth <= 720) {
-      return 72;
+      return Math.max(24, Math.round(baseTileSize * sceneScale * 0.75));
     }
 
-    return 96;
+    return Math.round(baseTileSize * sceneScale);
   }
 
   // Adapta o número de colunas ao espaço disponível no ecrã.
@@ -67,6 +73,8 @@ function initGame() {
     if (steeveTile > walkLimit) {
       steeveTile = walkLimit;
     }
+
+    sceneFrame.style.setProperty('--scene-tile-size', tileSize + 'px');
   }
 
   // Desenha o cenário (tiles de relva, terra e pedras) no ecrã.
@@ -160,14 +168,14 @@ function initGame() {
           stoneBadge.className = 'stone-timer-badge';
           stoneBadge.setAttribute('data-col', '' + column);
           stoneBadge.style.position = 'absolute';
-          stoneBadge.style.left = (column * tileSize + 6) + 'px';
-          stoneBadge.style.bottom = (row * tileSize + (tileSize * 0.9) + 2) + 'px';
+          stoneBadge.style.left = (column * tileSize + scaleSceneValue(6)) + 'px';
+          stoneBadge.style.bottom = (row * tileSize + (tileSize * 0.9) + scaleSceneValue(2)) + 'px';
           stoneBadge.style.zIndex = '3';
           stoneBadge.style.background = 'rgba(0,0,0,0.6)';
           stoneBadge.style.color = '#fff';
-          stoneBadge.style.padding = '4px 6px';
+          stoneBadge.style.padding = scaleSceneValue(4) + 'px ' + scaleSceneValue(6) + 'px';
           stoneBadge.style.borderRadius = '6px';
-          stoneBadge.style.fontSize = '12px';
+          stoneBadge.style.fontSize = Math.max(10, scaleSceneValue(12)) + 'px';
           stoneBadge.textContent = '' + (stone.seconds_left || 0);
           sceneGrid.appendChild(stoneBadge);
         }
@@ -219,13 +227,14 @@ function initGame() {
     steeve.style.left = (steeveTile * tileSize) + 'px';
     steeve.style.bottom = ((tileSize * mapRows) - parseInt(tileSize / 12, 10)) + 'px';
     steeve.style.width = 'auto';
-    steeve.style.height = (tileSize * 1.375) + 'px';
+    steeve.style.height = (tileSize * 3) + 'px';
     localStorage.setItem('steeve-tile', '' + steeveTile);
 
+    //localização do machado
     var axeEl = document.getElementById('steeve-axe');
     if (axeEl) {
-      axeEl.style.left = (steeveTile * tileSize + Math.round(tileSize * 0.82)) + 'px';
-      axeEl.style.bottom = (tileSize * mapRows - parseInt(tileSize / 12, 10) + Math.round(tileSize * 0.45)) + 'px';
+      axeEl.style.left = (steeveTile * tileSize + Math.round(tileSize * 1.2)) + 'px';
+      axeEl.style.bottom = (tileSize * mapRows + Math.round(tileSize * 1)) + 'px';
     }
   }
 
@@ -253,8 +262,8 @@ function initGame() {
     }
     axeEl.style.display = 'flex';
     axeEl.innerHTML = '<img src=\"' + axeImg + '\" alt=\"Machado\" class=\"axe-icon\"><span class=\"axe-level\">Nv.' + axeLevel + '</span>';
-    axeEl.style.left = (steeveTile * tileSize + Math.round(tileSize * 0.82)) + 'px';
-    axeEl.style.bottom = (tileSize * mapRows - parseInt(tileSize / 12, 10) + Math.round(tileSize * 0.45)) + 'px';
+    axeEl.style.left = (steeveTile * tileSize + Math.round(tileSize * 2.8)) + 'px';
+    axeEl.style.bottom = (tileSize * mapRows + Math.round(tileSize * 2.0)) + 'px';
   }
 
   // _parseDatetime: ❌ fora (labs nao usam timestamps). Necessario para calcular tempo restante.
@@ -344,7 +353,6 @@ function initGame() {
     });
   }
 
-  // Traduz o estado de um slot para texto legível (dentro da matéria: lógica/if-else ✅).
   function formatState(state) {
     if (state === 'building') {
       return 'A construir';
@@ -610,6 +618,8 @@ for (var ei = 0; ei < existingStumps.length; ei++) { existing.push(existingStump
       var t = trees[ti];
       var column = parseInt(t.column, 10);
       var row = mapRows - 1;
+      var treeLeft = (column - 2) * tileSize;
+      var treeBottom = row * tileSize + Math.round(tileSize * 0.87);
 
       if (t.available) {
         var tree = document.createElement('img');
@@ -617,9 +627,9 @@ for (var ei = 0; ei < existingStumps.length; ei++) { existing.push(existingStump
         tree.src = '/static/img/tree.png';
         tree.alt = 'Árvore';
         tree.setAttribute('data-col', '' + column);
-        tree.style.left = (column * tileSize + (tileSize / 8)) + 'px';
-        tree.style.bottom = (row * tileSize + (tileSize * 0.9) + 2) + 'px';
-        tree.style.width = (tileSize * 1.8) + 'px';
+        tree.style.left = treeLeft + 'px';
+        tree.style.bottom = treeBottom + 'px';
+        tree.style.width = (tileSize * 5) + 'px';
         tree.style.height = 'auto';
         tree.style.pointerEvents = 'auto';
         tree.setAttribute('draggable', 'false');
@@ -670,7 +680,7 @@ for (var ei = 0; ei < existingStumps.length; ei++) { existing.push(existingStump
         stump.setAttribute('data-col', '' + column);
         stump.style.position = 'absolute';
         stump.style.left = (column * tileSize + (tileSize / 8)) + 'px';
-        stump.style.bottom = (row * tileSize + (tileSize * 0.9) + 2) + 'px';
+        stump.style.bottom = treeBottom + 'px';
         stump.style.width = (tileSize * 1.8) + 'px';
         stump.style.height = (tileSize * 1.0) + 'px';
         stump.style.pointerEvents = 'none';
