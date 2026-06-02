@@ -1,7 +1,6 @@
 Base de Dados — Minecraft2D
 
 O projeto usa SQLite via sqlite3 (Python puro, sem ORM). O ficheiro está em models/minecraft2d.sqlite. A classe Database (models/database.py) é o data access layer que faz todas as queries.
-
 Tabelas (6 no total)
 
 1. users
@@ -11,7 +10,10 @@ Campos: id, username, email, password_hash, wood, stone, iron, has_axe, axe_leve
 
 2. building_slots
 Campos: id, user_id (FK→users), slot_number (1-4), building_type, state, action_type, started_at, ready_at, created_at
-- O que é: 4 slots de construção por jogador. Cada slot tem uma máquina de estados: empty → building → ready → working → collectable → ready.
+
+- O que é: 4 slots de construção por jogador. Cada slot tem uma máquina de estados: 
+empty → building → ready → working → collectable → ready.
+
 - Interações: Criados automaticamente no registo. Atualizados nas rotas /api/build, /api/task/start, /api/task/collect (game.py). Permitem construções e tarefas temporizadas sem cron jobs (compara ready_at com o relógio do servidor).
 
 3. action_logs
@@ -20,7 +22,7 @@ Campos: id, user_id (FK→users), message, created_at
 - Interações: Inserido em cada ação de jogo (cortar, minerar, construir, etc.). Mostrado na dashboard (últimas 8 ações).
 
 4. trees
-Campos: id, column (2, 8, 15 — posições no mapa), chopped_at, removed_at, created_at
+Campos: id, column (2, 7, 13 — posições no mapa), chopped_at, removed_at, created_at
 - O que é: Árvores no mapa, com sistema de cooldown de 10s (RESOURCE_RESPAWN_SECONDS).
 - Interações: Lidas/atualizadas na rota /api/chop. Se chopped_at já passou do cooldown, a árvore fica disponível novamente.
 
@@ -30,13 +32,13 @@ Campos: id, column (1, 4, 7, 10 — posições no mapa), mined_at, removed_at, c
 - Interações: Lidas/atualizadas na rota /api/mine-stone. Lógica idêntica às árvores.
 
 6. buildings
-Campos: key (PK), name, cost_wood, cost_stone, cost_iron, construction_seconds, task_name, task_seconds, reward_wood, reward_stone, reward_iron, description
-- O que é: Catálogo de construções disponíveis (dados estáticos seedados na criação da BD). 3 edifícios:
-  - cabana → Mesa de Trabalho (fabrica/upgrade do machado)
-  - mina → Fornalha (funde minério → ferro)
-  - forja → Quinta (gera madeira+pedra)
-- Interações: Lido ao mostrar a dashboard e ao validar construções/tarefas. Nunca é escrito durante o jogo.
+Campos: key (PK), name, cost_wood, cost_stone, construction_seconds, task_name, task_seconds, reward_wood, reward_stone, reward_iron, description
 
+- O que é: Catálogo de construções disponíveis (dados estáticos seedados na criação da BD). 3 edifícios:
+- cabana → Mesa de Trabalho (fabrica/upgrade do machado)
+- mina → Fornalha (funde minério → ferro)
+- forja → Quinta (gera madeira+pedra)
+- Interações: Lido ao mostrar a dashboard e ao validar construções/tarefas. Nunca é escrito durante o jogo.
 Interações principais (fluxo de dados)
 
 Registo → INSERT users + 4 building_slots 'empty' + action_log
@@ -48,6 +50,6 @@ Construir      → UPDATE users (deduz custo) + UPDATE slot (estado 'building', 
 Recolher tarefa → UPDATE users (soma recompensa ou dá machado) + UPDATE slot (volta a 'ready')
 Leaderboard    → SELECT users ORDER BY (wood+stone+iron) DESC LIMIT 10
 
-Todas as queries usam ? como placeholder (protegido contra SQL injection).
+Todas as queries usam ? como placeholder (protegido contra SQL injection). 
 
 As ligações são abertas com connection.row_factory = sqlite3.Row para aceder a colunas por nome.
