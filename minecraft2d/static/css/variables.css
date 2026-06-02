@@ -1,0 +1,16 @@
+:root {
+  --bg: #0b1324;
+  --panel: rgba(10, 18, 35, 0.84);
+  --panel-2: rgba(19, 28, 50, 0.92);
+  --text: #edf2ff;
+  --muted: #a8b3cf;
+  --accent: #77c66e;
+  --accent-2: #f0b65c;
+  --danger: #ef7070;
+  --border: rgba(162, 180, 221, 0.18);
+  --inventory-slot-size: 60px;
+}
+
+* {
+  box-sizing: border-box;
+}

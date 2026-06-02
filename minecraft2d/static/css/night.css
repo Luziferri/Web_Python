@@ -5,7 +5,6 @@ body.dark-mode {
     radial-gradient(circle at top, rgba(80, 128, 94, 0.2), transparent 28%),
     radial-gradient(circle at 20% 20%, rgba(152, 120, 68, 0.16), transparent 20%),
     linear-gradient(180deg, #0b1018 0%, #0a0f16 48%, #0d1320 100%);
-  overflow: hidden;
 }
 
 body.dark-mode .topbar {

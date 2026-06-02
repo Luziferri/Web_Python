@@ -1,0 +1,635 @@
+/* Game dashboard layout */
+.game-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.status-panel {
+  width: 100%;
+  margin: 0;
+  padding: 1.25rem;
+  border-radius: 0.9rem;
+  background: linear-gradient(180deg, rgba(9,14,24,0.75), rgba(7,10,18,0.85));
+  border: 4px solid rgba(64,84,56,0.12);
+  box-shadow: inset 0 -12px 0 rgba(0,0,0,0.25), 0 10px 30px rgba(2,6,23,0.45);
+}
+
+/* Card styles */
+.resource-card,
+.slot-card,
+.log-card,
+.building-option {
+  border: 3px solid rgba(20,30,18,0.5);
+  background: linear-gradient(180deg, rgba(34,44,28,0.65), rgba(18,24,20,0.5));
+  box-shadow: 0 6px 0 rgba(0,0,0,0.25);
+  border-radius: 0.6rem;
+}
+
+.panel-header h2,
+.section-header h2 {
+  text-shadow: 0 2px 0 rgba(0,0,0,0.6);
+  letter-spacing: 0.02em;
+  font-weight: 800;
+}
+
+.slots-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.slot-card {
+  padding: 1rem;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.building-option {
+  padding: 1rem;
+  cursor: pointer;
+}
+
+/* Scene */
+.scene-frame {
+  border-radius: 0.6rem;
+}
+
+.scene-panel,
+.status-panel,
+.slots-section,
+.logs-section {
+  padding: 1rem;
+}
+
+.panel-header h2,
+.section-header h2,
+.status-panel h2,
+.slots-section h2,
+.logs-section h2 {
+  margin: 0;
+}
+
+.panel-header p,
+.section-header p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+}
+
+.scene-frame {
+  position: relative;
+  height: 480px;
+  width: 100%;
+  max-width: 1152px;
+  overflow: hidden;
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(136, 212, 255, 0.35), rgba(16, 24, 44, 0.08)),
+    linear-gradient(180deg, #7ed0ff 0%, #b9ecff 42%, #dcecff 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 -36px 0 rgba(86, 47, 24, 0.08);
+}
+
+.scene-grid {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 100%;
+}
+
+.scene-tile,
+.steeve-sprite {
+  position: absolute;
+  image-rendering: pixelated;
+}
+
+.steeve-sprite {
+  filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.35));
+  transition: left 0.1s ease, transform 0.1s ease;
+  z-index: 3;
+}
+
+.steeve-sprite.facing-left {
+  transform: scaleX(-1);
+}
+
+.steeve-axe-badge {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  z-index: 4;
+  pointer-events: none;
+  transition: left 0.1s ease;
+}
+
+.steeve-axe-badge .axe-icon {
+  width: calc(var(--scene-tile-size, 96px) * 1.125);
+  height: calc(var(--scene-tile-size, 96px) * 1.125);
+  image-rendering: pixelated;
+  transform: scaleX(-1) rotate(-60deg);
+}
+
+.steeve-axe-badge .axe-level {
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 0.65rem;
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.scene-tree {
+  position: absolute;
+  z-index: 2;
+  image-rendering: pixelated;
+  pointer-events: auto;
+}
+
+.scene-stone {
+  position: absolute;
+  z-index: 2;
+  image-rendering: pixelated;
+  pointer-events: auto;
+}
+
+/* Controls */
+.move-controls {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+.move-btn {
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid rgba(18, 18, 18, 0.95);
+  border-radius: 0.15rem;
+  background: #8b8b8b;
+  color: #f3f3f3;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.22), inset -2px -2px 0 rgba(0, 0, 0, 0.34);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.move-btn:hover {
+  background: #777;
+  color: #ffffa0;
+}
+
+.move-btn:active {
+  box-shadow: inset -2px -2px 0 rgba(255, 255, 255, 0.22), inset 2px 2px 0 rgba(0, 0, 0, 0.34);
+}
+
+.scene-help {
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+}
+
+/* Grids */
+.resource-grid,
+.building-list,
+.slots-grid,
+.logs-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+/* Inventory */
+.inventory-panel {
+  margin: 1rem auto 1.25rem;
+  padding: 0.7rem;
+  width: fit-content;
+  max-width: 100%;
+  border-radius: 0.3rem;
+  background: #c6c6c6;
+  box-shadow: 5px 5px 0 #555555, inset 4px 4px 0 #fefefe;
+}
+
+.inventory-panel h3 {
+  margin: 0 0 0.7rem;
+  font-size: 1rem;
+  color: #3f3f3f;
+}
+
+.inventory-slots {
+  display: grid;
+  gap: 0.22rem;
+}
+
+.inventory-main {
+  grid-template-columns: repeat(9, var(--inventory-slot-size));
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.inventory-hotbar {
+  grid-template-columns: repeat(9, var(--inventory-slot-size));
+  justify-content: center;
+}
+
+.inventory-slot {
+  width: var(--inventory-slot-size);
+  height: var(--inventory-slot-size);
+  aspect-ratio: 1 / 1;
+  min-height: var(--inventory-slot-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #8b8b8b;
+  box-shadow: inset 1.5px 1.5px 0 rgba(55, 55, 55, 0.8), inset -2px -2px 0 #ffffff;
+}
+
+.inventory-item {
+  position: relative;
+  width: 86%;
+  height: 86%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inventory-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.inventory-number {
+  position: absolute;
+  right: -2px;
+  bottom: -3px;
+  color: #ffffff;
+  font-size: 0.85rem;
+  text-shadow: #111 1px 1px 0;
+}
+
+.inventory-item.item-enter {
+  animation: inventory-pop 0.25s ease-out;
+}
+
+@keyframes inventory-pop {
+  from {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Resources */
+.resource-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 1rem 0;
+}
+
+.resource-card,
+.slot-card,
+.log-card {
+  padding: 0.9rem;
+  border-radius: 0.95rem;
+  border: 1px solid rgba(162, 180, 221, 0.16);
+  background: rgba(13, 22, 41, 0.72);
+}
+
+.resource-card span,
+.slot-meta,
+.slot-cost,
+.log-card time {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.slot-cost {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: #c8a45c;
+  text-align: center;
+}
+
+.resource-card strong {
+  display: block;
+  font-size: 1.7rem;
+  margin-top: 0.2rem;
+}
+
+.building-list {
+  grid-template-columns: 1fr;
+}
+
+.building-option {
+  display: grid;
+  gap: 0.3rem;
+  text-align: left;
+  padding: 0.95rem;
+  background: linear-gradient(135deg, rgba(240, 182, 92, 0.16), rgba(77, 177, 93, 0.12));
+  color: var(--text);
+  border: 1px solid rgba(162, 180, 221, 0.14);
+}
+
+.building-option.selected {
+  outline: 2px solid var(--accent);
+}
+
+/* Slots & logs */
+.slots-section,
+.logs-section {
+  margin-top: 1rem;
+}
+
+.slots-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+
+.slot-card {
+  min-height: 190px;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.slot-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.slot-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(162, 180, 221, 0.14);
+  color: #e2e8f0;
+  font-size: 0.8rem;
+}
+
+.slot-state.building { background: rgba(245, 158, 11, 0.18); }
+.slot-state.ready { background: rgba(34, 197, 94, 0.18); }
+.slot-state.working { background: rgba(59, 130, 246, 0.18); }
+.slot-state.collectable { background: rgba(168, 85, 247, 0.2); }
+
+.slot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.slot-action {
+  padding: 0.7rem 0.85rem;
+  background: rgba(162, 180, 221, 0.14);
+  color: var(--text);
+}
+
+.slot-action.build { background: rgba(245, 158, 11, 0.22); }
+.slot-action.task { background: rgba(59, 130, 246, 0.2); }
+.slot-action.collect { background: rgba(34, 197, 94, 0.25); }
+
+.logs-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+
+/* Dashboard coherence: Minecraft blocky style overrides */
+.topbar {
+  border: 0;
+  border-radius: 0.35rem;
+  margin: 0.8rem 1rem 0;
+  padding: 0.75rem 0.95rem;
+  background: #c6c6c6;
+  box-shadow: 5px 5px 0 #555555, inset 4px 4px 0 #fefefe;
+  backdrop-filter: none;
+}
+
+.topbar h1 {
+  color: #2b2b2b;
+  font-size: 1.35rem;
+}
+
+.topbar .eyebrow {
+  color: #545454;
+}
+
+.nav-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.1rem;
+  padding: 0.35rem 0.85rem;
+  border: 2px solid rgba(18, 18, 18, 0.95);
+  border-radius: 0.15rem;
+  background: #8b8b8b;
+  color: #f3f3f3;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.45);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.22), inset -2px -2px 0 rgba(0, 0, 0, 0.34);
+}
+
+.nav-links a:hover {
+  background: #777;
+  color: #ffffa0;
+}
+
+.nav-theme-toggle {
+  min-height: 2.1rem;
+  padding: 0.35rem 0.85rem;
+  border: 2px solid rgba(18, 18, 18, 0.95);
+  border-radius: 0.15rem;
+  background: #8b8b8b;
+  color: #f3f3f3;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.45);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.22), inset -2px -2px 0 rgba(0, 0, 0, 0.34);
+  cursor: pointer;
+}
+
+.nav-theme-toggle:hover {
+  background: #777;
+  color: #ffffa0;
+}
+
+.scene-panel,
+.status-panel,
+.slots-section,
+.logs-section {
+  border: 0;
+  border-radius: 0.35rem;
+  background: #c6c6c6;
+  box-shadow: 5px 5px 0 #555555, inset 4px 4px 0 #fefefe;
+  color: #2f2f2f;
+}
+
+.panel-header p,
+.section-header p,
+.slot-meta,
+.log-card time {
+  color: #4a4a4a;
+}
+
+.panel-header h2,
+.section-header h2,
+.status-panel h2,
+.slots-section h2,
+.logs-section h2,
+.status-panel h3 {
+  color: #2b2b2b;
+  text-shadow: none;
+}
+
+.scene-frame {
+  border: 3px solid #777;
+  border-radius: 0.25rem;
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.4), inset 0 -6px 0 rgba(0, 0, 0, 0.14);
+}
+
+.building-option,
+.slot-card,
+.log-card {
+  border: 0;
+  border-radius: 0.25rem;
+  background: #8b8b8b;
+  color: #f4f4f4;
+  box-shadow: inset 1.5px 1.5px 0 rgba(55, 55, 55, 0.8), inset -2px -2px 0 #ffffff;
+}
+
+.building-option span,
+.slot-meta,
+.log-card time {
+  color: #efefef;
+  opacity: 0.9;
+}
+
+.building-option.selected {
+  outline: 2px solid #f4e984;
+  outline-offset: 2px;
+}
+
+.slot-state {
+  border-radius: 0.15rem;
+  padding: 0.24rem 0.45rem;
+  font-size: 0.72rem;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.slot-state.building { background: #9c6a1e; }
+.slot-state.ready { background: #3b7f2f; }
+.slot-state.working { background: #2d5f93; }
+.slot-state.collectable { background: #6b3f93; }
+
+.slot-action {
+  border: 2px solid rgba(18, 18, 18, 0.9);
+  border-radius: 0.15rem;
+  color: #ececec;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.22), inset -2px -2px 0 rgba(0, 0, 0, 0.34);
+}
+
+.slot-action.build { background: linear-gradient(180deg, #b6854b, #8d6130); }
+.slot-action.task { background: linear-gradient(180deg, #4b7cb2, #355b85); }
+.slot-action.collect { background: linear-gradient(180deg, #5d9f47, #3f7730); }
+.slot-action.craft { background: linear-gradient(180deg, #a855f7, #7c3aed); }
+
+/* Ensure scene panel fills width */
+.scene-panel {
+  width: 100%;
+}
+
+.scene-frame {
+  width: 100%;
+  max-width: none;
+}
+
+/* Responsive */
+@media (max-width: 980px) {
+  .game-layout,
+  .slots-grid,
+  .logs-list {
+    grid-template-columns: 1fr;
+  }
+
+  .scene-frame {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --inventory-slot-size: 40px;
+  }
+
+  .topbar {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 0.55rem;
+    padding: 0.65rem;
+  }
+
+  .resource-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inventory-panel {
+    padding: 0.55rem;
+  }
+
+  .inventory-number {
+    font-size: 0.78rem;
+  }
+
+  .scene-frame {
+    height: 360px;
+  }
+
+  .scene-tile,
+  .steeve-sprite {
+    width: 72px;
+    height: 72px;
+  }
+}
+
+@media (max-width: 430px) {
+  :root {
+    --inventory-slot-size: 34px;
+  }
+
+  .topbar {
+    margin: 0.4rem;
+    padding: 0.5rem;
+  }
+
+  .nav-links {
+    gap: 0.45rem;
+  }
+
+  .scene-panel,
+  .status-panel,
+  .slots-section,
+  .logs-section {
+    padding: 0.7rem;
+  }
+
+  .scene-frame {
+    height: 250px;
+  }
+
+  .panel-header p,
+  .section-header p {
+    font-size: 0.9rem;
+  }
+}
