@@ -28,13 +28,38 @@
       <div id="inventory-hotbar" class="inventory-slots inventory-hotbar"></div>
      
     </div>
+    <!-- Construções: cartão com nome, imagem e receita. Extra (imagens + grelha). -->
     <div class="building-picker">
       <h3>Construções</h3>
       <div class="building-list">
         {% for key, building in buildings.items() %}
         <button class="building-option" data-building-key="{{ key }}">
-          <strong>{{ building.name }}</strong>
-          <span>{{ building.cost_wood }} madeira · {{ building.cost_stone }} pedra</span>
+          <div class="building-info">
+            <strong class="building-name">{{ building.name }}</strong>
+            {% if building.image %}
+            <img src="{{ building.image }}" alt="{{ building.name }}" class="building-icon">
+            {% else %}
+            <div class="building-icon building-icon--placeholder">{{ building.name[0] }}</div>
+            {% endif %}
+          </div>
+          <!-- Grelha de crafting 3×3 estilo Minecraft. Extra. -->
+          <div class="recipe-grid">
+            <div class="recipe-slot">
+              <img src="{{ url_for('static', filename='img/madeira.png') }}" alt="" class="recipe-item">
+              <span class="recipe-count">{{ building.cost_wood }}</span>
+            </div>
+            <div class="recipe-slot">
+              <img src="{{ url_for('static', filename='img/pedra.png') }}" alt="" class="recipe-item">
+              <span class="recipe-count">{{ building.cost_stone }}</span>
+            </div>
+            <div class="recipe-slot"></div>
+            <div class="recipe-slot"></div>
+            <div class="recipe-slot"></div>
+            <div class="recipe-slot"></div>
+            <div class="recipe-slot"></div>
+            <div class="recipe-slot"></div>
+            <div class="recipe-slot"></div>
+          </div>
         </button>
         {% endfor %}
       </div>

@@ -560,6 +560,8 @@ class Database:
 
     # ensure_trees / ensure_stones: ❌ fora (específicos do jogo). Necessário para garantir que árvores e pedras existem no mapa mesmo depois de reiniciar o servidor.
     # Garante que as 3 árvores do mapa existem na BD (INSERT OR IGNORE para não duplicar).
+    # As colunas das árvores foram ajustadas (2, 6, 11) durante o desenvolvimento.
+    # Matéria: SQL INSERT OR IGNORE, iteração sobre tuplo.
     def ensure_trees(self):
         with self._connect() as connection:
             cursor = connection.cursor()

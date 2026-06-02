@@ -1,4 +1,7 @@
 /* Modo escuro / noturno — UI e cenário */
+/* Matéria: seletores CSS, cores, box-shadow, gradientes. */
+/* Extra: pseudo-elementos ::before/::after, @keyframes, radial-gradient avançado. */
+
 body.dark-mode {
   color: #e9edf7;
   background:
@@ -68,13 +71,14 @@ body.dark-mode .move-btn:hover {
   color: #ffffa0;
 }
 
-/* Cenário noturno: sky, estrelas, lua, pirilampos */
+/* Cenário noturno: fundo night.png + overlay de escuridão + lua */
 body.dark-mode .scene-frame {
   background: url('/static/img/night.png') repeat;
   border-color: #6d7788;
   box-shadow: inset 0 3px 0 rgba(150, 168, 196, 0.35), inset 0 -6px 0 rgba(0, 0, 0, 0.35);
 }
 
+/* Overlay gradiente radial: zona da lua clara, extremidades escuras. Extra. */
 body.dark-mode .scene-frame::after {
   content: '';
   position: absolute;
@@ -84,6 +88,7 @@ body.dark-mode .scene-frame::after {
   z-index: 10;
 }
 
+/* Sol (dia) — quadrado branco. Extra. */
 .scene-frame::before {
   content: '';
   position: absolute;
@@ -100,6 +105,7 @@ body.dark-mode .scene-frame::after {
     0 0 0 60px rgba(255, 255, 255, 0.03);
 }
 
+/* Lua (noite) — imagem moon.png com glow quadrado (box-shadow). Extra. */
 body.dark-mode .scene-frame::before {
   background: url('/static/img/moon.png') center center / contain no-repeat;
   box-shadow:
@@ -109,6 +115,7 @@ body.dark-mode .scene-frame::before {
   animation: moon-glow 4s ease-in-out infinite alternate;
 }
 
+/* Nuvens do dia — animação de deriva horizontal. Extra. */
 .scene-clouds {
   position: absolute;
   inset: 0;
@@ -147,6 +154,7 @@ body.dark-mode .scene-clouds {
   100% { left: calc(100% + 200px); }
 }
 
+/* Estrelas: círculos brancos com twinkle. Extra. */
 .scene-stars {
   position: absolute;
   inset: 0;
@@ -161,6 +169,7 @@ body.dark-mode .scene-clouds {
   pointer-events: none;
 }
 
+/* Pirilampos: círculos verdes com float. Extra. */
 .firefly {
   position: absolute;
   width: 5px;
@@ -172,7 +181,7 @@ body.dark-mode .scene-clouds {
   pointer-events: none;
 }
 
-/* Leaderboard (modo escuro) */
+/* Leaderboard (modo escuro) — matéria: seletores CSS. */
 body.dark-mode .caixa-ecra-todo {
   background: #2b323e;
   border-color: #5d6673;
@@ -197,7 +206,7 @@ body.dark-mode .badge-1 { color: #ffd700; text-shadow: 1px 1px 0px #000; }
 body.dark-mode .badge-2 { color: #e0e0e0; text-shadow: 1px 1px 0px #000; }
 body.dark-mode .badge-3 { color: #e6a87c; text-shadow: 1px 1px 0px #000; }
 
-/* Animações */
+/* Animações — Extra @keyframes */
 @keyframes moon-glow {
   0% { box-shadow: 0 0 0 8px rgba(255, 255, 200, 0.12), 0 0 0 25px rgba(255, 255, 200, 0.06), 0 0 0 50px rgba(255, 255, 200, 0.02); }
   100% { box-shadow: 0 0 0 15px rgba(255, 255, 200, 0.2), 0 0 0 40px rgba(255, 255, 200, 0.1), 0 0 0 75px rgba(255, 255, 200, 0.04); }
@@ -217,7 +226,7 @@ body.dark-mode .badge-3 { color: #e6a87c; text-shadow: 1px 1px 0px #000; }
   100% { transform: translate(0, 0) scale(0.8); opacity: 0.4; }
 }
 
-/* Mobile: esconde lua, sol e nuvens */
+/* Mobile: esconde lua, sol e nuvens. Matéria: media queries. */
 @media (max-width: 980px) {
   .scene-frame::before,
   .scene-clouds {

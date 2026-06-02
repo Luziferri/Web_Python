@@ -1,3 +1,7 @@
+// Gere os efeitos visuais do cenário (dia/nuvens, noite/estrelas/pirilampos) e o toggle de tema.
+// Matéria: manipulação DOM, classes CSS, eventos, localStorage.
+// Extra: animações CSS com @keyframes, criação dinâmica de elementos.
+
 window.Theme = (function () {
   var elements = [];
 
@@ -11,6 +15,7 @@ window.Theme = (function () {
     }
   }
 
+  // Cria 4 nuvens retangulares com animação de deriva. Extra.
   function createDay(sceneFrame) {
     var clouds = document.createElement('div');
     clouds.className = 'scene-clouds';
@@ -22,6 +27,7 @@ window.Theme = (function () {
     elements.push(clouds);
   }
 
+  // Cria 100 estrelas (tamanho/posição/atraso aleatórios) + 10 pirilampos. Extra.
   function createNight(sceneFrame) {
     var starsContainer = document.createElement('div');
     starsContainer.className = 'scene-stars';
@@ -66,6 +72,7 @@ window.Theme = (function () {
   return { create: create, destroy: destroy };
 })();
 
+// Inicialização do tema ao carregar a página + evento do botão. Matéria.
 (function () {
   var themeToggle = document.getElementById('theme-toggle');
   var storageKey = 'minecraft2d-theme';
@@ -82,6 +89,7 @@ window.Theme = (function () {
     window.Theme.create(document.getElementById('scene-frame'));
   }
 
+  // localStorage: extra (não dado nas aulas, mas útil para persistência).
   var saved = localStorage.getItem(storageKey);
   applyTheme(saved === 'dark' ? 'dark' : 'light');
 

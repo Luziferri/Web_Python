@@ -1,7 +1,7 @@
 # views.py
 from datetime import datetime, timedelta
 
-from flask import Blueprint, current_app, jsonify, render_template, request
+from flask import Blueprint, current_app, jsonify, render_template, request, url_for
 from flask_login import current_user, login_required
 
 
@@ -87,6 +87,14 @@ def dashboard():
     # @login_required ✅ (Lab 08).
     ensure_state(current_user)
     buildings = get_db().get_buildings()
+    # Mapa de imagens para cada construção. Extra (não existia nos labs).
+    building_images = {
+        'cabana': 'craftingTable.png',
+        'mina': 'fornalha.png',
+    }
+    for key, b in buildings.items():
+        img = building_images.get(key)
+        b['image'] = url_for('static', filename='img/' + img) if img else None
     return render_template("dashboard.html", buildings=buildings)
 
 
