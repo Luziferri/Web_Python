@@ -139,8 +139,9 @@ body.dark-mode .scene-frame::before {
 
 /* Leaderboard (modo escuro) */
 body.dark-mode .caixa-ecra-todo {
-  background: #2b323e;
-  border-color: #5d6673;
+  background: #2f343d;
+  border: none;
+  box-shadow: 5px 5px 0 #131821, inset 4px 4px 0 #555c68;
 }
 
 body.dark-mode .titulo-ranking-centro {
@@ -149,7 +150,7 @@ body.dark-mode .titulo-ranking-centro {
 
 body.dark-mode .ranking-item {
   background: #4d5560;
-  border-color: #788191;
+  border: none;
   color: #f2f5fb;
   box-shadow: inset 1.5px 1.5px 0 rgba(38, 45, 54, 0.85), inset -2px -2px 0 #788191;
 }
