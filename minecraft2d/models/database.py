@@ -114,7 +114,7 @@ class BuildingSlot:
         self.id = id
         self.user_id = user_id      # ID do jogador dono do slot
         self.slot_number = slot_number  # Número do slot (1 a 4), único por jogador
-        self.building_type = building_type  # Chave da construção (ex: "cabana", "mina", "forja")
+        self.building_type = building_type  # Chave da construção (ex: "cabana", "forja", "mina")
         self.state = state          # Estado atual: empty/building/ready/working/collectable
         self.action_type = action_type  # Descrição da tarefa atual (ex: "Extrair diamantes")
         self.started_at = started_at    # Quando a construção/tarefa começou
@@ -251,7 +251,7 @@ class Database:
     # 2. Remove tabelas de esquemas anteriores (drop_legacy_tables)
     # 3. Adiciona colunas novas a tabelas existentes (migrate_schema)
     # 4. Insere dados iniciais (construções, árvores, pedras) com INSERT OR IGNORE
-    # 5. Atualiza a construção "forja" para os valores atuais (UPDATE)
+    # 5. Atualiza a construção "mina" para os valores atuais (UPDATE)
     def create_table(self):
         with self._connect() as connection:
             cursor = connection.cursor()
@@ -383,19 +383,19 @@ class Database:
             cursor.execute(
                 "INSERT OR IGNORE INTO buildings VALUES ('cabana','Mesa de Trabalho',15,5,0,20,'Fabricar Machado',20,0,0,0,0,'Produz ferramentas de madeira para construir.')"
             )
-            # Fornalha (mina): funde minério em ferro
+            # Fornalha (forja): funde minério em ferro
             # Custo: 10 madeira + 15 pedra | Constrói em 25s | Tarefa: 25s | Recompensa: 1 ferro
             cursor.execute(
-                "INSERT OR IGNORE INTO buildings VALUES ('mina','Fornalha',10,15,0,25,'Fundir minerio',25,0,0,1,0,'Funde minerio em lingotes de ferro.')"
+                "INSERT OR IGNORE INTO buildings VALUES ('forja','Fornalha',10,15,0,25,'Fundir minerio',25,0,0,1,0,'Funde minerio em lingotes de ferro.')"
             )
-            # Mineradora de Diamantes (forja): extrai diamantes
+            # Mineradora de Diamantes (mina): extrai diamantes
             # Custo: 10 madeira + 10 pedra + 20 ferro | Constrói em 30s | Tarefa: 30s | Recompensa: 1 diamante
             cursor.execute(
-                "INSERT OR IGNORE INTO buildings (key, name, cost_wood, cost_stone, cost_iron, construction_seconds, task_name, task_seconds, reward_wood, reward_stone, reward_iron, reward_diamond, description) VALUES ('forja','Mineradora de Diamantes',10,10,20,30,'Extrair diamantes',30,0,0,0,1,'Extrai diamantes preciosos.')"
+                "INSERT OR IGNORE INTO buildings (key, name, cost_wood, cost_stone, cost_iron, construction_seconds, task_name, task_seconds, reward_wood, reward_stone, reward_iron, reward_diamond, description) VALUES ('mina','Mineradora de Diamantes',10,10,20,30,'Extrair diamantes',30,0,0,0,1,'Extrai diamantes preciosos.')"
             )
-            # Atualiza a forja caso já exista na BD (migração de dados antigos)
+            # Atualiza a mina caso já exista na BD (migração de dados antigos)
             cursor.execute(
-                "UPDATE buildings SET name='Mineradora de Diamantes', cost_wood=10, cost_stone=10, cost_iron=20, task_name='Extrair diamantes', reward_wood=0, reward_stone=0, reward_iron=0, reward_diamond=1, description='Extrai diamantes preciosos.' WHERE key='forja'"
+                "UPDATE buildings SET name='Mineradora de Diamantes', cost_wood=10, cost_stone=10, cost_iron=20, task_name='Extrair diamantes', reward_wood=0, reward_stone=0, reward_iron=0, reward_diamond=1, description='Extrai diamantes preciosos.' WHERE key='mina'"
             )
             connection.commit()
 

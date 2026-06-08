@@ -93,8 +93,8 @@ def dashboard():
     # Mapa de imagens para cada construção. Extra (não existia nos labs).
     building_images = {
         'cabana': 'craftingTable.png',
-        'mina': 'fornalha.png',
-        'forja': 'diamont_miner.png',
+        'mina': 'diamont_miner.png',
+        'forja': 'fornalha.png',
     }
     for key, b in buildings.items():
         img = building_images.get(key)

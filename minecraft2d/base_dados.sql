@@ -105,22 +105,22 @@ VALUES
      'Fabricar Machado', 20, 0, 0, 0, 0,
      'Produz ferramentas de madeira para construir.');
 
--- Fornalha (mina): funde minério em lingotes de ferro
+-- Fornalha (forja): funde minério em lingotes de ferro
 INSERT OR IGNORE INTO buildings
     (key, name, cost_wood, cost_stone, cost_iron, construction_seconds,
      task_name, task_seconds, reward_wood, reward_stone, reward_iron,
      reward_diamond, description)
 VALUES
-    ('mina', 'Fornalha', 10, 15, 0, 25,
+    ('forja', 'Fornalha', 10, 15, 0, 25,
      'Fundir minerio', 25, 0, 0, 1, 0,
      'Funde minerio em lingotes de ferro.');
 
--- Mineradora de Diamantes (forja): extrai diamantes
+-- Mineradora de Diamantes (mina): extrai diamantes
 INSERT OR IGNORE INTO buildings
     (key, name, cost_wood, cost_stone, cost_iron, construction_seconds,
      task_name, task_seconds, reward_wood, reward_stone, reward_iron,
      reward_diamond, description)
 VALUES
-    ('forja', 'Mineradora de Diamantes', 10, 10, 20, 30,
+    ('mina', 'Mineradora de Diamantes', 10, 10, 20, 30,
      'Extrair diamantes', 30, 0, 0, 0, 1,
      'Extrai diamantes preciosos.');
