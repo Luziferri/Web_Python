@@ -464,6 +464,7 @@
 .slot-action.build { background: rgba(245, 158, 11, 0.22); }
 .slot-action.task { background: rgba(59, 130, 246, 0.2); }
 .slot-action.collect { background: rgba(34, 197, 94, 0.25); }
+.slot-action.remove { background: rgba(239, 68, 68, 0.22); }
 
 .logs-list {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -614,6 +615,7 @@
 .slot-action.task { background: linear-gradient(180deg, #4b7cb2, #355b85); }
 .slot-action.collect { background: linear-gradient(180deg, #5d9f47, #3f7730); }
 .slot-action.craft { background: linear-gradient(180deg, #a855f7, #7c3aed); }
+.slot-action.remove { background: linear-gradient(180deg, #c0392b, #922b21); }
 
 /* Ensure scene panel fills width */
 .scene-panel {

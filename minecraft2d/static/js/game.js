@@ -26,7 +26,8 @@ function initGame() {
   var previousInventory = {
     wood: -1,
     stone: -1,
-    iron: -1
+    iron: -1,
+    diamonds: -1
   };
 
   function scaleSceneValue(value) {
@@ -449,15 +450,21 @@ function initGame() {
       card.appendChild(meta);
 
       if (slot.state === 'ready' && slot.building_type === 'cabana') {
-        var costWood, costStone, costIron;
+        var costWood, costStone, costIron, costDiamond;
         if (axeLevel === 0) {
-          costWood = 15; costStone = 0; costIron = 0;
+          costWood = 15; costStone = 0; costIron = 0; costDiamond = 0;
         } else if (axeLevel === 1) {
-          costWood = 20; costStone = 20; costIron = 0;
-        } else {
+          costWood = 20; costStone = 20; costIron = 0; costDiamond = 0;
+        } else if (axeLevel === 2) {
           costWood = 15 + (axeLevel * 8);
           costStone = 8 + (axeLevel * 5);
           costIron = 3 + (axeLevel - 1) * 2;
+          costDiamond = 0;
+        } else {
+          costWood = 15 + (axeLevel * 8);
+          costStone = 8 + (axeLevel * 5);
+          costIron = 0;
+          costDiamond = 3 + (axeLevel - 2) * 2;
         }
         var costEl = document.createElement('div');
         costEl.className = 'slot-cost';
@@ -465,6 +472,7 @@ function initGame() {
         costParts.push(costWood + ' madeira');
         if (costStone > 0) costParts.push(costStone + ' pedra');
         if (costIron > 0) costParts.push(costIron + ' ferro');
+        if (costDiamond > 0) costParts.push(costDiamond + ' diamante(s)');
         costEl.textContent = 'Custo: ' + costParts.join(' · ');
         card.appendChild(costEl);
       }
@@ -480,6 +488,16 @@ function initGame() {
             buildSlot(slotId);
           };
           actionBox.appendChild(buildButton);
+        } else {
+          var removeButton = document.createElement('button');
+          removeButton.className = 'slot-action remove';
+          removeButton.textContent = 'Remover';
+          removeButton.onclick = function () {
+            if (confirm('Tens a certeza que queres remover esta construção?')) {
+              removeSlot(slotId);
+            }
+          };
+          actionBox.appendChild(removeButton);
         }
 
         if (slot.state === 'ready') {
@@ -571,6 +589,12 @@ function initGame() {
         label: 'Ferro',
         amount: parseInt(user.iron || 0, 10),
         icon: '/static/img/iron.png'
+      },
+      {
+        key: 'diamonds',
+        label: 'Diamantes',
+        amount: parseInt(user.diamonds || 0, 10),
+        icon: '/static/img/diamante.png'
       }
     ];
     var index;
@@ -761,6 +785,10 @@ for (var ei = 0; ei < existingStumps.length; ei++) { existing.push(existingStump
 
   function buildSlot(slotId) {
     sendAction('/api/build/' + slotId, { building_key: selectedBuildingKey });
+  }
+
+  function removeSlot(slotId) {
+    sendAction('/api/slot/' + slotId + '/remove', {});
   }
 
   function startTask(slotId) {

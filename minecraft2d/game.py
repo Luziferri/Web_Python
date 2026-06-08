@@ -57,6 +57,8 @@ def ensure_state(user):
         user.stone = RESOURCE_MAX_AMOUNT
     if user.iron > RESOURCE_MAX_AMOUNT:
         user.iron = RESOURCE_MAX_AMOUNT
+    if user.diamonds > RESOURCE_MAX_AMOUNT:
+        user.diamonds = RESOURCE_MAX_AMOUNT
     database.update_user_resources(user)
 
 
@@ -92,6 +94,7 @@ def dashboard():
     building_images = {
         'cabana': 'craftingTable.png',
         'mina': 'fornalha.png',
+        'forja': 'diamont_miner.png',
     }
     for key, b in buildings.items():
         img = building_images.get(key)
@@ -175,6 +178,7 @@ def api_state():
                 "wood": current_user.wood,
                 "stone": current_user.stone,
                 "iron": current_user.iron,
+                "diamonds": current_user.diamonds,
                 "has_axe": current_user.has_axe,
                 "axe_level": current_user.axe_level,
                 "skin": current_user.skin,
@@ -211,11 +215,12 @@ def api_build(slot_id):
     if slot.state != "empty":
         return jsonify({"ok": False, "message": "Esse slot já tem uma construção."}), 400
 
-    if current_user.wood < building["cost_wood"] or current_user.stone < building["cost_stone"]:
+    if current_user.wood < building["cost_wood"] or current_user.stone < building["cost_stone"] or current_user.iron < building.get("cost_iron", 0):
         return jsonify({"ok": False, "message": "Recursos insuficientes."}), 400
 
     current_user.wood -= building["cost_wood"]
     current_user.stone -= building["cost_stone"]
+    current_user.iron -= building.get("cost_iron", 0)
     slot.building_type = building_key
     slot.state = "building"
     slot.action_type = None
@@ -257,24 +262,35 @@ def api_task_start(slot_id):
             cost_wood = 15
             cost_stone = 0
             cost_iron = 0
+            cost_diamond = 0
         elif current_user.axe_level == 1:
             cost_wood = 20
             cost_stone = 20
             cost_iron = 0
-        else:
+            cost_diamond = 0
+        elif current_user.axe_level == 2:
             cost_wood = 15 + (current_user.axe_level * 8)
             cost_stone = 8 + (current_user.axe_level * 5)
             cost_iron = 3 + (current_user.axe_level - 1) * 2
-        if current_user.wood < cost_wood or current_user.stone < cost_stone or current_user.iron < cost_iron:
+            cost_diamond = 0
+        else:
+            # A partir do nivel 3 (upgrade para machado de diamante), usa diamantes em vez de ferro
+            cost_wood = 15 + (current_user.axe_level * 8)
+            cost_stone = 8 + (current_user.axe_level * 5)
+            cost_iron = 0
+            cost_diamond = 3 + (current_user.axe_level - 2) * 2
+        if current_user.wood < cost_wood or current_user.stone < cost_stone or current_user.iron < cost_iron or current_user.diamonds < cost_diamond:
             parts = []
             if cost_wood > 0: parts.append(f"{cost_wood} madeira")
             if cost_stone > 0: parts.append(f"{cost_stone} pedra")
             if cost_iron > 0: parts.append(f"{cost_iron} ferro")
+            if cost_diamond > 0: parts.append(f"{cost_diamond} diamante(s)")
             msg = "Precisas de " + ", ".join(parts) + "."
             return jsonify({"ok": False, "message": msg}), 400
         current_user.wood -= cost_wood
         current_user.stone -= cost_stone
         current_user.iron -= cost_iron
+        current_user.diamonds -= cost_diamond
         database.update_user_resources(current_user)
     else:
         slot.action_type = building["task_name"]
@@ -319,6 +335,7 @@ def api_task_collect(slot_id):
         current_user.wood += building["reward_wood"]
         current_user.stone += building["reward_stone"]
         current_user.iron += building.get("reward_iron", 0)
+        current_user.diamonds += building.get("reward_diamond", 0)
         database.update_user_resources(current_user)
 
     slot.state = "ready"
@@ -396,6 +413,27 @@ def api_mine_stone():
     return jsonify({"ok": True, "stone": current_user.stone, "respawn_seconds": RESOURCE_RESPAWN_SECONDS})
 
 
+@game_bp.route("/api/slot/<int:slot_id>/remove", methods=["POST"])
+@login_required
+def api_slot_remove(slot_id):
+    database = get_db()
+    slot = database.get_slot(slot_id, current_user.id)
+    if slot is None:
+        return jsonify({"ok": False, "message": "Slot inválido."}), 404
+
+    if slot.state == "empty":
+        return jsonify({"ok": False, "message": "O slot já está vazio."}), 400
+
+    slot.building_type = None
+    slot.state = "empty"
+    slot.action_type = None
+    slot.started_at = None
+    slot.ready_at = None
+    database.update_slot(slot)
+    database.add_action_log(current_user.id, f"Construção removida do slot {slot.slot_number}.")
+    return jsonify({"ok": True})
+
+
 @game_bp.route("/api/inventory/remove", methods=["POST"])
 @login_required
 def api_inventory_remove():
@@ -411,7 +449,7 @@ def api_inventory_remove():
     except (TypeError, ValueError):
         return jsonify({"ok": False, "message": "Quantidade inválida."}), 400
 
-    if resource not in {"wood", "stone", "iron"}:
+    if resource not in {"wood", "stone", "iron", "diamonds"}:
         return jsonify({"ok": False, "message": "Recurso inválido."}), 400
 
     if amount <= 0:
@@ -421,8 +459,10 @@ def api_inventory_remove():
         current_value = current_user.wood
     elif resource == "stone":
         current_value = current_user.stone
-    else:
+    elif resource == "iron":
         current_value = current_user.iron
+    else:
+        current_value = current_user.diamonds
 
     if current_value < amount:
         return jsonify({"ok": False, "message": "Inventário insuficiente."}), 400
@@ -431,14 +471,16 @@ def api_inventory_remove():
         current_user.wood = current_value - amount
     elif resource == "stone":
         current_user.stone = current_value - amount
-    else:
+    elif resource == "iron":
         current_user.iron = current_value - amount
+    else:
+        current_user.diamonds = current_value - amount
 
-    label = {"wood": "madeira", "stone": "pedra", "iron": "ferro"}[resource]
+    label = {"wood": "madeira", "stone": "pedra", "iron": "ferro", "diamonds": "diamante(s)"}[resource]
     database.update_user_resources(current_user)
     database.add_action_log(current_user.id, f"{amount} {label} removida do inventário.")
 
-    return jsonify({"ok": True, "wood": current_user.wood, "stone": current_user.stone, "iron": current_user.iron})
+    return jsonify({"ok": True, "wood": current_user.wood, "stone": current_user.stone, "iron": current_user.iron, "diamonds": current_user.diamonds})
 
 @game_bp.route("/leaderboard")
 @login_required
