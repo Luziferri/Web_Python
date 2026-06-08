@@ -42,7 +42,7 @@ def _format_datetime(value):
 class User(UserMixin):
     # Construtor: guarda os dados do user vindos da BD ou do registo.
     # wood/stone começam a 26 (recursos iniciais do jogo).
-    def __init__(self, id, username, email, password_hash, wood=26, stone=26, iron=0, created_at=None, has_axe=0, axe_level=0):
+    def __init__(self, id, username, email, password_hash, wood=26, stone=26, iron=0, created_at=None, has_axe=0, axe_level=0, skin="default"):
         self.id = id
         self.username = username
         self.email = email
@@ -55,6 +55,7 @@ class User(UserMixin):
         # has_axe / axe_level: ✅ (INTEGER DEFAULT, igual a wood/stone). Funcionalidade extra do projeto (machado da Mesa de Trabalho).
         self.has_axe = has_axe
         self.axe_level = axe_level
+        self.skin = skin
 
     # Recebe uma password em texto limpo e guarda o seu hash. ✅ (Lab 08).
     def set_password(self, password):
@@ -80,6 +81,7 @@ class User(UserMixin):
             has_axe=row["has_axe"] if "has_axe" in row.keys() else 0,
             axe_level=row["axe_level"] if "axe_level" in row.keys() else 0,
             iron=row["iron"] if "iron" in row.keys() else 0,
+            skin=row["skin"] if "skin" in row.keys() else "default",
         )
 
 
@@ -227,6 +229,7 @@ class Database:
                     iron INTEGER NOT NULL DEFAULT 0,
                     has_axe INTEGER NOT NULL DEFAULT 0,
                     axe_level INTEGER NOT NULL DEFAULT 0,
+                    skin TEXT NOT NULL DEFAULT 'default',
                     created_at TEXT NOT NULL
                 )
                 """
@@ -342,10 +345,10 @@ class Database:
             cursor = connection.cursor()
             cursor.execute(
                 """
-                INSERT INTO users (username, email, password_hash, wood, stone, created_at)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO users (username, email, password_hash, wood, stone, skin, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
-                (username, email, password_hash, 26, 26, created_at),
+                (username, email, password_hash, 26, 26, 'default', created_at),
             )
             connection.commit()
             return self.get_user_by_id(cursor.lastrowid)
@@ -413,6 +416,14 @@ class Database:
             connection.execute(
                 "UPDATE users SET has_axe = ?, axe_level = ? WHERE id = ?",
                 (has_axe, axe_level, user_id),
+            )
+            connection.commit()
+
+    def update_user_skin(self, user_id, skin):
+        with self._connect() as connection:
+            connection.execute(
+                "UPDATE users SET skin = ? WHERE id = ?",
+                (skin, user_id),
             )
             connection.commit()
 

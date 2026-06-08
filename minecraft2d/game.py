@@ -1,4 +1,5 @@
 # views.py
+import json
 from datetime import datetime, timedelta
 
 from flask import Blueprint, current_app, jsonify, render_template, request, url_for
@@ -95,7 +96,7 @@ def dashboard():
     for key, b in buildings.items():
         img = building_images.get(key)
         b['image'] = url_for('static', filename='img/' + img) if img else None
-    return render_template("dashboard.html", buildings=buildings)
+    return render_template("dashboard.html", buildings=buildings, buildings_json=json.dumps(buildings))
 
 
 @game_bp.route("/api/state")
@@ -176,6 +177,7 @@ def api_state():
                 "iron": current_user.iron,
                 "has_axe": current_user.has_axe,
                 "axe_level": current_user.axe_level,
+                "skin": current_user.skin,
             },
             "slots": slots,
             "logs": logs_list,
@@ -452,3 +454,33 @@ def api_leaderboard():
     database = get_db()
     ranking = database.get_leaderboard()
     return jsonify({"ranking": ranking})
+
+SKINS = {
+    "default": {"name": "Steve", "desc": "O clássico Steve.", "img": "steeve.png"},
+    "gold": {"name": "Steve Dourado", "desc": "Brilho dourado.", "img": "steeve.png", "filter": "brightness(1.2) sepia(0.6) saturate(2)"},
+    "dark": {"name": "Steve Sombrio", "desc": "Versão sombria.", "img": "steeve.png", "filter": "brightness(0.5) contrast(1.3)"},
+    "fire": {"name": "Steve de Fogo", "desc": "Energia flamejante.", "img": "steeve.png", "filter": "brightness(1.1) hue-rotate(-20deg) saturate(2.5)"},
+    "ender": {"name": "Steve Ender", "desc": "Toque do End.", "img": "steeve.png", "filter": "brightness(0.9) hue-rotate(280deg) saturate(1.5)"},
+}
+
+@game_bp.route("/skins")
+@login_required
+def skins():
+    return render_template("skins.html", skins=SKINS)
+
+@game_bp.route("/api/skins")
+@login_required
+def api_skins():
+    return jsonify({"skins": SKINS, "current_skin": current_user.skin})
+
+@game_bp.route("/api/skin/select", methods=["POST"])
+@login_required
+def api_skin_select():
+    data = request.get_json(silent=True) or {}
+    skin = data.get("skin")
+    if skin not in SKINS:
+        return jsonify({"ok": False, "message": "Skin inválida."}), 400
+    database = get_db()
+    database.update_user_skin(current_user.id, skin)
+    current_user.skin = skin
+    return jsonify({"ok": True, "skin": skin})

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Skins · Minecraft 2D{% endblock %}
+
+{% block content %}
+<section class="caixa-ecra-todo">
+    <div class="titulo-ranking-centro">
+        <h2>Loja de Skins</h2>
+        <p>Escolhe a tua skin!</p>
+    </div>
+
+    <div class="skins-grid">
+        {% for key, skin in skins.items() %}
+        <div class="skin-card" data-skin="{{ key }}">
+            <div class="skin-preview">
+                <img src="{{ url_for('static', filename='img/' + skin.img) }}"
+                     alt="{{ skin.name }}"
+                     class="skin-img"
+                     {% if skin.filter %}style="filter: {{ skin.filter }}"{% endif %}>
+            </div>
+            <div class="skin-info">
+                <h3>{{ skin.name }}</h3>
+                <p>{{ skin.desc }}</p>
+            </div>
+            <button class="skin-select-btn" data-skin="{{ key }}">Selecionar</button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <p id="skin-status" class="skin-status"></p>
+</section>
+
+<script>
+    let currentSkin = null;
+
+    function carregarSkins() {
+        fetch("{{ url_for('game.api_skins') }}")
+            .then(response => response.json())
+            .then(data => {
+                currentSkin = data.current_skin;
+                atualizarUI();
+            })
+            .catch(erro => console.error("Erro ao carregar skins:", erro));
+    }
+
+    function atualizarUI() {
+        document.querySelectorAll(".skin-card").forEach(card => {
+            const skin = card.dataset.skin;
+            const btn = card.querySelector(".skin-select-btn");
+            if (skin === currentSkin) {
+                card.classList.add("skin-selected");
+                btn.textContent = "Ativa";
+                btn.disabled = true;
+            } else {
+                card.classList.remove("skin-selected");
+                btn.textContent = "Selecionar";
+                btn.disabled = false;
+            }
+        });
+        const status = document.getElementById("skin-status");
+        if (currentSkin) {
+            const nome = document.querySelector(`.skin-card[data-skin="${currentSkin}"] h3`)?.textContent || currentSkin;
+            status.textContent = "Skin ativa: " + nome;
+        }
+    }
+
+    document.addEventListener("click", function(e) {
+        const btn = e.target.closest(".skin-select-btn");
+        if (!btn || btn.disabled) return;
+
+        const skin = btn.dataset.skin;
+        fetch("{{ url_for('game.api_skin_select') }}", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({skin: skin})
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    currentSkin = data.skin;
+                    atualizarUI();
+                }
+            })
+            .catch(erro => console.error("Erro ao selecionar skin:", erro));
+    });
+
+    carregarSkins();
+</script>
+{% endblock %}

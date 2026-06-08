@@ -585,6 +585,14 @@ function initGame() {
     }
   }
 
+  var skinFilters = {
+    'default': '',
+    'gold': 'brightness(1.2) sepia(0.6) saturate(2)',
+    'dark': 'brightness(0.5) contrast(1.3)',
+    'fire': 'brightness(1.1) hue-rotate(-20deg) saturate(2.5)',
+    'ender': 'brightness(0.9) hue-rotate(280deg) saturate(1.5)'
+  };
+
   // Atualiza toda a interface com dados do servidor (chama as funções de renderização).
   function renderState(payload) {
     latestStatePayload = payload;
@@ -597,6 +605,10 @@ function initGame() {
     buildScene(payload.stones || []);
     if (payload.trees) {
       renderTrees(payload.trees);
+    }
+
+    if (steeve && payload.user.skin) {
+      steeve.style.filter = skinFilters[payload.user.skin] || '';
     }
   }
 

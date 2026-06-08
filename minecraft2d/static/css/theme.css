@@ -181,6 +181,49 @@ body.dark-mode .scene-clouds {
   pointer-events: none;
 }
 
+/* Skins (modo escuro) */
+body.dark-mode .skin-card {
+  background: #4d5560;
+  box-shadow: inset 1.5px 1.5px 0 rgba(38, 45, 54, 0.85), inset -2px -2px 0 #788191;
+}
+
+body.dark-mode .skin-card:hover {
+  background: #5d6673;
+}
+
+body.dark-mode .skin-card.skin-selected {
+  background: #3d6d3d;
+  box-shadow: 0 0 0 3px #77c66e, inset 1.5px 1.5px 0 rgba(38, 45, 54, 0.85), inset -2px -2px 0 #788191;
+}
+
+body.dark-mode .skin-info h3 {
+  color: #f2f5fb;
+}
+
+body.dark-mode .skin-info p {
+  color: #b0b8c8;
+}
+
+body.dark-mode .skin-select-btn {
+  background: #474f59;
+  color: #f2f5fb;
+  border-color: #0f1217;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.15), inset -2px -2px 0 rgba(0, 0, 0, 0.45);
+}
+
+body.dark-mode .skin-select-btn:hover:not(:disabled) {
+  background: #3a4149;
+  color: #ffffa0;
+}
+
+body.dark-mode .skin-select-btn:disabled {
+  background: #3d5a3d;
+}
+
+body.dark-mode .skin-status {
+  color: #f2f5fb;
+}
+
 /* Leaderboard (modo escuro) — matéria: seletores CSS. */
 body.dark-mode .caixa-ecra-todo {
   background: #2f343d;
