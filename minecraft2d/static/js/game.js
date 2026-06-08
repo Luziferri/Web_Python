@@ -590,12 +590,7 @@ function initGame() {
     'gold': 'brightness(1.2) sepia(0.6) saturate(2)',
     'dark': 'brightness(0.5) contrast(1.3)',
     'fire': 'brightness(1.1) hue-rotate(-20deg) saturate(2.5)',
-    'ender': 'brightness(0.9) hue-rotate(280deg) saturate(1.5)',
-    'sunset': 'brightness(1.1) hue-rotate(-10deg) saturate(1.8) sepia(0.2)',
-    'rose': 'brightness(1.05) hue-rotate(300deg) saturate(1.6)',
-    'lavender': 'brightness(1.0) hue-rotate(240deg) saturate(1.3) sepia(0.2)',
-    'aqua': 'brightness(1.0) hue-rotate(180deg) saturate(1.5)',
-    'peach': 'brightness(1.1) hue-rotate(-30deg) saturate(1.4) sepia(0.3)'
+    'ender': 'brightness(0.9) hue-rotate(280deg) saturate(1.5)'
   };
 
   // Atualiza toda a interface com dados do servidor (chama as funções de renderização).
