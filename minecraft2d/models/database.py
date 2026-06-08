@@ -328,12 +328,19 @@ class Database:
                 "INSERT OR IGNORE INTO buildings VALUES ('forja','Quinta',20,10,30,'Colher colheitas',30,4,4,0,'Cultiva alimentos e gera madeira.')"
             )
             self.drop_legacy_tables(cursor)
+            self.migrate_schema(cursor)
             connection.commit()
 
             # drop_legacy_tables: ❌ fora (função de limpeza de esquemas anteriores, não existe no lab). Usada durante desenvolvimento para remover tabelas de versões anteriores do esquema.
     def drop_legacy_tables(self, cursor):
         for table_name in ("action_log", "building_slot", "stone", "tree", "user"):
             cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
+
+    def migrate_schema(self, cursor):
+        try:
+            cursor.execute("ALTER TABLE users ADD COLUMN skin TEXT NOT NULL DEFAULT 'default'")
+        except sqlite3.OperationalError:
+            pass
 
     # hasher.hash(password) ✅ (Lab 08), INSERT com ? ✅ (Lab 07).
     # cursor.lastrowid: ❌ fora (lab faz return do objeto criado de outra forma). Usado para obter o ID do novo user imediatamente após o INSERT, evitando uma segunda query à BD.
