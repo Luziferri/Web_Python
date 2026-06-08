@@ -158,4 +158,4 @@ Não existe suite de testes automatizados. Para testar manualmente:
 
 ## 👥 Grupo
 
-**Minecraft2D** — Projeto desenvolvido para a UC de Desenvolvimento de Aplicações Web.
+**Bernardo Pinheiro, Inês Medeiros, Ricardo Janz** — Projeto desenvolvido para a UC de Desenvolvimento de Aplicações Web.
