@@ -461,6 +461,11 @@ SKINS = {
     "dark": {"name": "Steve Das Sombras", "desc": "Sombrio.", "img": "steeve.png", "filter": "brightness(0.5) contrast(1.3)"},
     "fire": {"name": "Steve Bronseado", "desc": "Apanhou solzinho.", "img": "steeve.png", "filter": "brightness(1.1) hue-rotate(-20deg) saturate(2.5)"},
     "ender": {"name": "Steve Rosa", "desc": "Rosinha.", "img": "steeve.png", "filter": "brightness(0.9) hue-rotate(280deg) saturate(1.5)"},
+    "sunset": {"name": "Alex Bela", "desc": "Brilho do pôr-do-sol.", "img": "steeve.png", "filter": "brightness(1.1) hue-rotate(-10deg) saturate(1.8) sepia(0.2)"},
+    "rose": {"name": "Alex Rosa", "desc": "Suave e romântica.", "img": "steeve.png", "filter": "brightness(1.05) hue-rotate(300deg) saturate(1.6)"},
+    "lavender": {"name": "Alex Lavanda", "desc": "Toque de lavanda.", "img": "steeve.png", "filter": "brightness(1.0) hue-rotate(240deg) saturate(1.3) sepia(0.2)"},
+    "aqua": {"name": "Alex Água", "desc": "Refrescante.", "img": "steeve.png", "filter": "brightness(1.0) hue-rotate(180deg) saturate(1.5)"},
+    "peach": {"name": "Alex Pêssego", "desc": "Doce como pêssego.", "img": "steeve.png", "filter": "brightness(1.1) hue-rotate(-30deg) saturate(1.4) sepia(0.3)"},
 }
 
 @game_bp.route("/skins")
