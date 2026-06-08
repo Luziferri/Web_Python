@@ -30,22 +30,28 @@
 </section>
 
 <script>
-    let currentSkin = null;
+    var currentSkin = null;
 
     function carregarSkins() {
         fetch("{{ url_for('game.api_skins') }}")
-            .then(response => response.json())
-            .then(data => {
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
                 currentSkin = data.current_skin;
                 atualizarUI();
             })
-            .catch(erro => console.error("Erro ao carregar skins:", erro));
+            .catch(function(erro) {
+                console.error("Erro ao carregar skins:", erro);
+            });
     }
 
     function atualizarUI() {
-        document.querySelectorAll(".skin-card").forEach(card => {
-            const skin = card.dataset.skin;
-            const btn = card.querySelector(".skin-select-btn");
+        var cards = document.querySelectorAll(".skin-card");
+        for (var i = 0; i < cards.length; i++) {
+            var card = cards[i];
+            var skin = card.getAttribute("data-skin");
+            var btn = card.querySelector(".skin-select-btn");
             if (skin === currentSkin) {
                 card.classList.add("skin-selected");
                 btn.textContent = "Ativa";
@@ -55,33 +61,48 @@
                 btn.textContent = "Selecionar";
                 btn.disabled = false;
             }
-        });
-        const status = document.getElementById("skin-status");
+        }
+        var status = document.getElementById("skin-status");
         if (currentSkin) {
-            const nome = document.querySelector(`.skin-card[data-skin="${currentSkin}"] h3`)?.textContent || currentSkin;
+            var cards2 = document.querySelectorAll(".skin-card[data-skin='" + currentSkin + "'] h3");
+            var nome = currentSkin;
+            if (cards2.length > 0) {
+                nome = cards2[0].textContent;
+            }
             status.textContent = "Skin ativa: " + nome;
         }
     }
 
-    document.addEventListener("click", function(e) {
-        const btn = e.target.closest(".skin-select-btn");
-        if (!btn || btn.disabled) return;
-
-        const skin = btn.dataset.skin;
+    function selecionarSkin(skin) {
         fetch("{{ url_for('game.api_skin_select') }}", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({skin: skin})
         })
-            .then(response => response.json())
-            .then(data => {
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
                 if (data.ok) {
                     currentSkin = data.skin;
                     atualizarUI();
                 }
             })
-            .catch(erro => console.error("Erro ao selecionar skin:", erro));
-    });
+            .catch(function(erro) {
+                console.error("Erro ao selecionar skin:", erro);
+            });
+    }
+
+    var botoes = document.querySelectorAll(".skin-select-btn");
+    for (var i = 0; i < botoes.length; i++) {
+        (function(btn) {
+            btn.onclick = function() {
+                if (btn.disabled) return;
+                var skin = btn.getAttribute("data-skin");
+                selecionarSkin(skin);
+            };
+        })(botoes[i]);
+    }
 
     carregarSkins();
 </script>

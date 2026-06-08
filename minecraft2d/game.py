@@ -456,11 +456,11 @@ def api_leaderboard():
     return jsonify({"ranking": ranking})
 
 SKINS = {
-    "default": {"name": "Steve", "desc": "O clássico Steve.", "img": "steeve.png"},
-    "gold": {"name": "Steve Dourado", "desc": "Brilho dourado.", "img": "steeve.png", "filter": "brightness(1.2) sepia(0.6) saturate(2)"},
-    "dark": {"name": "Steve Sombrio", "desc": "Versão sombria.", "img": "steeve.png", "filter": "brightness(0.5) contrast(1.3)"},
-    "fire": {"name": "Steve de Fogo", "desc": "Energia flamejante.", "img": "steeve.png", "filter": "brightness(1.1) hue-rotate(-20deg) saturate(2.5)"},
-    "ender": {"name": "Steve Ender", "desc": "Toque do End.", "img": "steeve.png", "filter": "brightness(0.9) hue-rotate(280deg) saturate(1.5)"},
+    "default": {"name": "Steve", "desc": "Clássico.", "img": "steeve.png"},
+    "gold": {"name": "Steve Dourado", "desc": "Douradinho.", "img": "steeve.png", "filter": "brightness(1.2) sepia(0.6) saturate(2)"},
+    "dark": {"name": "Steve Das Sombras", "desc": "Sombrio.", "img": "steeve.png", "filter": "brightness(0.5) contrast(1.3)"},
+    "fire": {"name": "Steve Bronseado", "desc": "Apanhou solzinho.", "img": "steeve.png", "filter": "brightness(1.1) hue-rotate(-20deg) saturate(2.5)"},
+    "ender": {"name": "Steve Rosa", "desc": "Rosinha.", "img": "steeve.png", "filter": "brightness(0.9) hue-rotate(280deg) saturate(1.5)"},
 }
 
 @game_bp.route("/skins")
