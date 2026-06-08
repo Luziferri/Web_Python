@@ -4,9 +4,9 @@ O projeto usa SQLite via sqlite3 (Python puro, sem ORM). O ficheiro está em mod
 Tabelas (6 no total)
 
 1. users
-Campos: id, username, email, password_hash, wood, stone, iron, has_axe, axe_level, created_at
+Campos: id, username, email, password_hash, wood, stone, iron, diamonds, has_axe, axe_level, skin, created_at
 - O que é: Conta dos jogadores.
-- Interações: Criada no /register (auth.py), lida/atualizada em cada ação de jogo (cortar madeira, minerar pedra, construir, recolher recompensas). O password_hash usa pbkdf2_sha256 (passlib). has_axe/axe_level são para o machado da Mesa de Trabalho.
+- Interações: Criada no /register (auth.py), lida/atualizada em cada ação de jogo (cortar madeira, minerar pedra, construir, recolher recompensas, minerar diamantes). O password_hash usa pbkdf2_sha256 (passlib). has_axe/axe_level são para o machado da Mesa de Trabalho. diamonds é obtido como recompensa da Mineradora de Diamantes.
 
 2. building_slots
 Campos: id, user_id (FK→users), slot_number (1-4), building_type, state, action_type, started_at, ready_at, created_at
@@ -32,12 +32,12 @@ Campos: id, column (1, 4, 7, 10 — posições no mapa), mined_at, removed_at, c
 - Interações: Lidas/atualizadas na rota /api/mine-stone. Lógica idêntica às árvores.
 
 6. buildings
-Campos: key (PK), name, cost_wood, cost_stone, construction_seconds, task_name, task_seconds, reward_wood, reward_stone, reward_iron, description
+Campos: key (PK), name, cost_wood, cost_stone, cost_iron, construction_seconds, task_name, task_seconds, reward_wood, reward_stone, reward_iron, reward_diamond, description
 
 - O que é: Catálogo de construções disponíveis (dados estáticos seedados na criação da BD). 3 edifícios:
 - cabana → Mesa de Trabalho (fabrica/upgrade do machado)
 - mina → Fornalha (funde minério → ferro)
-- forja → Quinta (gera madeira+pedra)
+- forja → Mineradora de Diamantes (extrai diamantes; custo: 10 madeira + 10 pedra + 20 ferro; constrói em 30s; tarefa: 30s; recompensa: 1 diamante)
 - Interações: Lido ao mostrar a dashboard e ao validar construções/tarefas. Nunca é escrito durante o jogo.
 Interações principais (fluxo de dados)
 
@@ -46,9 +46,10 @@ Login   → SELECT users (valida password)
 Dashboard → SELECT users + building_slots + action_logs + trees + stones + buildings
 Cortar árvore → UPDATE trees (chopped_at) + UPDATE users (wood+4) + INSERT action_log
 Minerar pedra → UPDATE stones (mined_at) + UPDATE users (stone+2) + INSERT action_log
-Construir      → UPDATE users (deduz custo) + UPDATE slot (estado 'building', ready_at calculado)
-Recolher tarefa → UPDATE users (soma recompensa ou dá machado) + UPDATE slot (volta a 'ready')
-Leaderboard    → SELECT users ORDER BY (wood+stone+iron) DESC LIMIT 10
+Construir      → UPDATE users (deduz custo madeira/pedra/ferro) + UPDATE slot (estado 'building', ready_at calculado)
+Recolher tarefa → UPDATE users (soma recompensa: madeira, pedra, ferro ou diamante; ou dá machado) + UPDATE slot (volta a 'ready')
+Minerar diamante → Recolher tarefa da Mineradora de Diamantes (forja) → UPDATE users (diamonds+1) + INSERT action_log
+Leaderboard    → SELECT users ORDER BY (wood+stone+iron+diamonds) DESC LIMIT 10
 
 Todas as queries usam ? como placeholder (protegido contra SQL injection). 
 
