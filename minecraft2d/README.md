@@ -36,11 +36,12 @@ source .venv/bin/activate   # Linux / macOS
 pip install -r requirements.txt
 ```
 
-O ficheiro `requirements.txt` contém apenas:
+O ficheiro `requirements.txt` contém:
 
 ```
 Flask
 Flask-Login
+passlib
 ```
 
 ### 4. (Opcional) Base de dados
