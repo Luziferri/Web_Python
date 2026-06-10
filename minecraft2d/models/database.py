@@ -470,19 +470,6 @@ class Database:
             ).fetchone()
         return User.from_row(row)
 
-    # Atualiza todos os campos de um user na BD (username, email, password_hash, recursos).
-    def update_user(self, user):
-        with self._connect() as connection:
-            connection.execute(
-                """
-                UPDATE users
-                SET username = ?, email = ?, password_hash = ?, wood = ?, stone = ?
-                WHERE id = ?
-                """,
-                (user.username, user.email, user.password_hash, user.wood, user.stone, user.id),
-            )
-            connection.commit()
-
     # Atualiza os recursos (wood, stone, iron, diamonds) de um user. Usado após cada ação de jogo.
     def update_user_resources(self, user):
         with self._connect() as connection:
