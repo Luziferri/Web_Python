@@ -1,7 +1,5 @@
 # Ponto de entrada principal do servidor. ✅ (Lab 07/08 — server.py).
 # Cria a app Flask, carrega configurações, inicializa a base de dados e regista as rotas.
-import os
-
 from flask import Flask
 
 from extensions import login_manager
