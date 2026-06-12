@@ -4,6 +4,8 @@
 from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
+from models.database import Database
+
 
 # Blueprint agrupa rotas com prefixo comum (aqui sem prefixo).aaaaaaaaa
 auth_bp = Blueprint("auth", __name__)
