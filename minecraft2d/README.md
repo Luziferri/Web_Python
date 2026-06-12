@@ -31,11 +31,6 @@ source .venv/bin/activate   # Linux/macOS
 bash
 pip install -r requirements.txt
 
-<<<<<<< HEAD
-O ficheiro requirements.txt contém apenas:
-Flask
-Flask-Login
-=======
 O ficheiro `requirements.txt` contém:
 
 ```
@@ -43,7 +38,6 @@ Flask
 Flask-Login
 passlib
 ```
->>>>>>> cb7e4d20a21bdf1013e8f25000f56498ef745e39
 
 ### 4. Base de dados
 

@@ -20,56 +20,6 @@
 
 </section>
 
-<script>
-    function atualizarRanking() {
-        fetch("{{ url_for('game.api_leaderboard') }}")
-            .then(response => response.json())
-            .then(data => {
-                let lista = document.getElementById("ranking-list");
-                lista.innerHTML = ""; 
-
-                for (let i = 0; i < data.ranking.length; i++) {
-                    let jogador = data.ranking[i];
-                    
-                    let li = document.createElement("li");
-                    li.classList.add("ranking-item");
-
-                    let posicao = i + 1;
-                    
-                    // Criar spans separados para nome e pontuação
-                    let spanInfo = document.createElement("span");
-                    let spanPontos = document.createElement("span");
-                    
-                    let textoPrefixo = posicao + "º ";
-
-                    if (posicao === 1) {
-                        li.classList.add("badge-1");
-                        textoPrefixo = "🥇 " + textoPrefixo;
-                    } else if (posicao === 2) {
-                        li.classList.add("badge-2");
-                        textoPrefixo = "🥈 " + textoPrefixo;
-                    } else if (posicao === 3) {
-                        li.classList.add("badge-3");
-                        textoPrefixo = "🥉 " + textoPrefixo;
-                    }
-
-                    spanInfo.textContent = textoPrefixo + jogador.username;
-                    spanPontos.textContent = jogador.score + " pts";
-                    
-                    // Adicionar as duas partes ao cartão
-                    li.appendChild(spanInfo);
-                    li.appendChild(spanPontos);
-                    
-                    lista.appendChild(li);
-                }
-            })
-            .catch(erro => console.error("Erro ao carregar o ranking:", erro));
-    }
-
-    // Carregar logo ao abrir a página
-    atualizarRanking();
-    
-    // Atualizar em tempo real a cada 5 segundos
-    setInterval(atualizarRanking, 5000);
-</script>
+<script id="leaderboard-config" type="application/json">{"apiLeaderboard": "{{ url_for('game.api_leaderboard') }}"}</script>
+<script src="{{ url_for('static', filename='js/leaderboard.js') }}"></script>
 {% endblock %}
