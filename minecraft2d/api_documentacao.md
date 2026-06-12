@@ -16,28 +16,26 @@ All routes require authentication via Flask-Login (session cookie), except `/log
 
 Cria uma nova conta de jogador.
 
-| Campo     | Tipo   | Localização |
-|-----------|--------|-------------|
-| username  | string | form-data   |
-| email     | string | form-data   |
-| password  | string | form-data   |
+Campo:    Tipo:     Localização:
+username  string    form-data
+email     string    form-data 
+password  string    form-data   
 
-**Respostas:**
-- `302` — Redirect para `/dashboard` em caso de sucesso
-- `200` — Renderiza `register.html` com mensagem de erro (flash)
+Respostas:
+- `302` - Redirect para `/dashboard` em caso de sucesso
+- `200` - Renderiza `register.html` com mensagem de erro (flash)
 
 ### `POST /login`
 
 Autentica um jogador existente.
 
-| Campo     | Tipo   | Localização |
-|-----------|--------|-------------|
-| username  | string | form-data   |
-| password  | string | form-data   |
+Campo:    Tipo:     Localização:
+username  string    form-data 
+password  string    form-data
 
-**Respostas:**
-- `302` — Redirect para `/dashboard` em caso de sucesso
-- `200` — Renderiza `login.html` com flash "Credenciais inválidas."
+Respostas:
+- `302` - Redirect para `/dashboard` em caso de sucesso
+- `200` - Renderiza `login.html` com flash "Credenciais inválidas."
 
 ### `GET /login`
 
@@ -51,8 +49,8 @@ Renderiza o formulário de registo (`register.html`).
 
 Termina a sessão do jogador.
 
-**Respostas:**
-- `302` — Redirect para `/login`
+Respostas:
+- `302` - Redirect para `/login`
 
 ---
 
@@ -62,8 +60,8 @@ Termina a sessão do jogador.
 
 Renderiza a página principal do jogo (`dashboard.html`).
 
-**Respostas:**
-- `200` — Página HTML com o estado do jogo
+Respostas:
+- `200` - Página HTML com o estado do jogo
 
 ---
 
@@ -71,8 +69,8 @@ Renderiza a página principal do jogo (`dashboard.html`).
 
 Devolve o estado completo do jogo em JSON.
 
-**Respostas:**
-- `200` — JSON com:
+Respostas:
+- `200` - JSON com:
 
 ```json
 {
@@ -132,14 +130,13 @@ Devolve o estado completo do jogo em JSON.
 
 Inicia a construção de um edifício num slot vazio.
 
-| Parâmetro     | Tipo   | Localização |
-|---------------|--------|-------------|
-| building_key  | string | JSON body   |
+Parâmetro:    Tipo:   Localização:
+building_key  string  JSON body
 
-**Respostas:**
-- `200` — `{"ok": true}`
-- `400` — `{"ok": false, "message": "..."}` (slot ocupado, recursos insuficientes, construção inválida)
-- `404` — `{"ok": false, "message": "Slot inválido."}`
+Respostas:
+- `200` - `{"ok": true}`
+- `400` - `{"ok": false, "message": "..."}` (slot ocupado, recursos insuficientes, construção inválida)
+- `404` - `{"ok": false, "message": "Slot inválido."}`
 
 ---
 
@@ -147,12 +144,12 @@ Inicia a construção de um edifício num slot vazio.
 
 Inicia a tarefa de um edifício já construído (estado `ready`).
 
-**Respostas:**
-- `200` — `{"ok": true}`
-- `400` — `{"ok": false, "message": "..."}` (slot não está ready, recursos insuficientes para upgrade do machado)
-- `404` — `{"ok": false, "message": "Slot inválido."}`
+Respostas:
+- `200` - `{"ok": true}`
+- `400` - `{"ok": false, "message": "..."}` (slot não está ready, recursos insuficientes para upgrade do machado)
+- `404` - `{"ok": false, "message": "Slot inválido."}`
 
-**Nota:** Para a Mesa de Trabalho (`cabana`), os custos variam conforme o nível do machado:
+Para a Mesa de Trabalho (`cabana`), os custos variam conforme o nível do machado:
 - Nível 0 (Fabricar): 15 madeira
 - Nível 1 (Upgrade): 20 madeira + 20 pedra
 - Nível 2 (Upgrade): 31 madeira + 18 pedra + 5 ferro
@@ -164,17 +161,16 @@ Inicia a tarefa de um edifício já construído (estado `ready`).
 
 Recolhe a recompensa de uma tarefa concluída (estado `collectable`).
 
-**Respostas:**
-- `200` — `{"ok": true}`
-- `400` — `{"ok": false, "message": "..."}` (sem recompensa para recolher)
-- `404` — `{"ok": false, "message": "Slot inválido."}`
+Respostas:
+- `200` - `{"ok": true}`
+- `400` - `{"ok": false, "message": "..."}` (sem recompensa para recolher)
+- `404` - `{"ok": false, "message": "Slot inválido."}`
 
 **Recompensas por edifício:**
-| Edifício            | Recompensa                            |
-|---------------------|---------------------------------------|
-| Mesa de Trabalho    | Machado (nível 1) ou upgrade de nível |
-| Fornalha            | +1 ferro                              |
-| Mineradora Diamantes| +1 diamante                           |
+Edifício:             Recompensa:
+Mesa de Trabalho      Machado (nível 1) ou upgrade de nível
+Fornalha              +1 ferro
+Mineradora Diamantes  +1 diamante
 
 ---
 
@@ -182,15 +178,14 @@ Recolhe a recompensa de uma tarefa concluída (estado `collectable`).
 
 Corta uma árvore numa coluna do mapa.
 
-| Parâmetro | Tipo | Localização |
-|-----------|------|-------------|
-| column    | int  | JSON body   |
+Parâmetro:  Tipo:   Localização:
+column      int     JSON body
 
-**Respostas:**
-- `200` — `{"ok": true, "wood": "int", "respawn_seconds": 10}`
-- `400` — `{"ok": false, "message": "..."}` (cooldown ativo, árvore inexistente, coluna inválida)
+Respostas:
+- `200` - `{"ok": true, "wood": "int", "respawn_seconds": 10}`
+- `400` - `{"ok": false, "message": "..."}` (cooldown ativo, árvore inexistente, coluna inválida)
 
-**Nota:** O rendimento de madeira é multiplicado por `(axe_level + 1)` se o jogador tiver machado.
+O rendimento de madeira é multiplicado por `(axe_level + 1)` se o jogador tiver machado.
 
 ---
 
@@ -198,13 +193,12 @@ Corta uma árvore numa coluna do mapa.
 
 Mina uma pedra numa coluna do mapa.
 
-| Parâmetro | Tipo | Localização |
-|-----------|------|-------------|
-| column    | int  | JSON body   |
+Parâmetro:    Tipo:   Localização:
+column        int     JSON body
 
-**Respostas:**
-- `200` — `{"ok": true, "stone": "int", "respawn_seconds": 10}`
-- `400` — `{"ok": false, "message": "..."}` (cooldown ativo, pedra inexistente, coluna inválida)
+Respostas:
+- `200` - `{"ok": true, "stone": "int", "respawn_seconds": 10}`
+- `400` - `{"ok": false, "message": "..."}` (cooldown ativo, pedra inexistente, coluna inválida)
 
 ---
 
@@ -212,10 +206,10 @@ Mina uma pedra numa coluna do mapa.
 
 Remove a construção de um slot, deixando-o vazio.
 
-**Respostas:**
-- `200` — `{"ok": true}`
-- `400` — `{"ok": false, "message": "O slot já está vazio."}`
-- `404` — `{"ok": false, "message": "Slot inválido."}`
+Respostas:
+- `200` - `{"ok": true}`
+- `400` - `{"ok": false, "message": "O slot já está vazio."}`
+- `404` - `{"ok": false, "message": "Slot inválido."}`
 
 ---
 
@@ -223,16 +217,15 @@ Remove a construção de um slot, deixando-o vazio.
 
 Remove manualmente recursos do inventário do jogador.
 
-| Parâmetro | Tipo   | Localização |
-|-----------|--------|-------------|
-| resource  | string | JSON body   |
-| amount    | int    | JSON body   |
+Parâmetro:    Tipo:   Localização:
+resource      string  JSON body
+amount        int     JSON body
 
 `resource` pode ser: `wood`, `stone`, `iron`, `diamonds`.
 
-**Respostas:**
-- `200` — `{"ok": true, "wood": "int", "stone": "int", "iron": "int", "diamonds": "int"}`
-- `400` — `{"ok": false, "message": "..."}` (recurso inválido, quantidade inválida, inventário insuficiente)
+Respostas:
+- `200` - `{"ok": true, "wood": "int", "stone": "int", "iron": "int", "diamonds": "int"}`
+- `400` - `{"ok": false, "message": "..."}` (recurso inválido, quantidade inválida, inventário insuficiente)
 
 ---
 
@@ -246,8 +239,8 @@ Renderiza a página de classificação (`leaderboard.html`).
 
 Devolve o ranking dos 10 melhores jogadores em JSON.
 
-**Respostas:**
-- `200` —
+Respostas
+- `200` -
 
 ```json
 {
@@ -271,8 +264,8 @@ Renderiza a página de seleção de skins (`skins.html`).
 
 Devolve todas as skins disponíveis e a skin atual do jogador.
 
-**Respostas:**
-- `200` —
+Respostas:
+- `200` -
 
 ```json
 {
@@ -293,10 +286,9 @@ Devolve todas as skins disponíveis e a skin atual do jogador.
 
 Seleciona uma skin para o jogador.
 
-| Parâmetro | Tipo   | Localização |
-|-----------|--------|-------------|
-| skin      | string | JSON body   |
+Parâmetro:    Tipo:      Localização:
+skin          string    JSON body
 
-**Respostas:**
-- `200` — `{"ok": true, "skin": "string"}`
-- `400` — `{"ok": false, "message": "Skin inválida."}`
+Respostas:
+- `200` - `{"ok": true, "skin": "string"}`
+- `400` - `{"ok": false, "message": "Skin inválida."}`
